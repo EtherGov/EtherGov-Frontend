@@ -1,2 +1,2 @@
-# SNZ-DAO-Tool-Frontend
-Frontend
+# EtherGov-Frontend
+Frontend for EtherGov
