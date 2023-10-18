@@ -1,19 +1,46 @@
 import { useEffect } from "react";
 import React, { useState } from "react";
 import { Text } from "@chakra-ui/react";
-import router from "next/router";
+import router, { useRouter } from "next/router";
 import { FaPlus, FaSearch } from 'react-icons/fa';
 import Image from "next/image";
 import logo from "../../../public/EtherGov_Logo.png";
+import { useAccount } from "wagmi";
+import { useToast } from "@chakra-ui/react";
 
 const HeroLayout = () => {
+  const router = useRouter();
+  const { address, isConnecting, isDisconnected } = useAccount();
+
+  const toast = useToast();
+
   const handleCreateRoute = () => {
-    router.push("/RegisterDomain");
+    if (isDisconnected) {
+      toast({
+        title: `Please connect your wallet first`,
+        position: "top-right",
+        isClosable: true,
+        status: "warning",
+        duration: 3000,
+      });
+      return;
+    }
+    router.push("/");
   };
   const handleBrowseRoute = () => {
-    router.push("/Marketplace");
+    if (isDisconnected) {
+      toast({
+        title: `Please connect your wallet first`,
+        position: "top-right",
+        isClosable: true,
+        status: "warning",
+        duration: 3000,
+      });
+      return;
+    }
+    router.push("/BrowseDAT");
   };
-  // bg-gradient-to-r from-rose-200 to-teal-200
+
   return (
     <div className="h-screen flex flex-col items-center bg-gradient-to-r from-rose-200 to-teal-200">
       <Image
@@ -34,14 +61,14 @@ const HeroLayout = () => {
       </div>
       <div className="space-y-4">
         <button
-          className="w-full py-4 px-32 border-4 border-slate-300 bg-transparent text-xl text-gray-500 font-semibold rounded-lg shadow-md hover:bg-teal-50 active:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-opacity-50 flex items-center justify-center"
+          className="w-full py-4 px-32 border-4 border-slate-300 bg-transparent text-xl text-gray-500 font-semibold rounded-lg shadow-md hover:bg-teal-50 flex items-center justify-center"
           onClick={handleCreateRoute}
         >
           <FaPlus className="mr-4" />
           <span>Create New DATs</span>
         </button>
         <button
-          className="w-full py-4 px-32 border-4 border-slate-300 bg-transparent text-xl text-gray-500 font-semibold rounded-lg shadow-md hover:bg-teal-50 active:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-opacity-50 flex items-center justify-center"
+          className="w-full py-4 px-32 border-4 border-slate-300 bg-transparent text-xl text-gray-500 font-semibold rounded-lg shadow-md hover:bg-teal-50 flex items-center justify-center"
           onClick={handleBrowseRoute}
         >
           <FaSearch className="mr-4" />

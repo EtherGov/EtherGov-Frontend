@@ -1,5 +1,5 @@
-import BrowseDATCard from "./components/BrowseDATCard";
-import Navbar from "./components/Navbar";
+import BrowseDATCard from "../components/Card/BrowseDATCard";
+import Navbar from "../components/Navbar/Navbar";
 import { AiOutlineSearch } from "react-icons/ai";
 import BoredApe from "../../public/BoredApe.webp";
 import Azuki from "../../public/azuki.jpeg";
