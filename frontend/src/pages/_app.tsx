@@ -42,7 +42,7 @@ export default function App({ Component, pageProps }: AppProps) {
     <WagmiConfig config={wagmiConfig}>
       <RainbowKitProvider chains={chains}>
         <ChakraProvider>
-          <Component {...pageProps} />;
+          <Component {...pageProps} />
         </ChakraProvider>
       </RainbowKitProvider>
     </WagmiConfig>
