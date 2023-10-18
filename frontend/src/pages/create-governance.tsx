@@ -15,17 +15,14 @@ import {
   Input,
   Select,
 } from "@chakra-ui/react";
-import { env } from "@/shared/environment";
+
 import GovernanceFactory from "../../public/GovernanceFactory.json";
 import { getWalletClient, watchContractEvent } from "wagmi/actions";
 import { envConfigMappings } from "@/utils/config";
-import { watch } from "fs";
+
 import axios from "axios";
 
 const inter = Inter({ subsets: ["latin"] });
-
-//test multisig
-//0x07E9FA5Dce2916e526f7c22fd1f4E630a186602D
 
 export default function Home() {
   const [minimumVotes, setMinimumVotes] = useState<number>(0);
@@ -34,16 +31,26 @@ export default function Home() {
   const [factoryAddress, setFactoryAddress] = useState<string>("");
   const [chainId, setChainId] = useState<number>(0);
   const [erc20, setErc20] = useState<string>("");
+  const [name, setName] = useState<string>("");
   const [walletAddress, setWalletAddress] = useState<string>("");
   const [governanceAddress, setGovernanceAddress] = useState<string>("");
   const [gasTank, setGasTank] = useState<string>("");
+  const [councilAddresses, setCouncilAddresses] = useState<string[]>([""]); // Start with one empty address
+
   const { address } = useAccount();
 
   const { config } = usePrepareContractWrite({
     address: factoryAddress as `0x${string}`,
     abi: GovernanceFactory.abi,
     functionName: "createGovernance",
-    args: [minimumVotes, mailboxAddress, gasPayMaster, erc20],
+    args: [
+      name,
+      minimumVotes,
+      mailboxAddress,
+      gasPayMaster,
+      erc20,
+      councilAddresses,
+    ],
   });
 
   const { data, isLoading, isSuccess, write } = useContractWrite(config);
@@ -69,6 +76,24 @@ export default function Home() {
       unwatch?.();
     },
   });
+
+  const handleInputChange = (
+    index: number,
+    event: React.ChangeEvent<HTMLInputElement>
+  ): void => {
+    const newAddresses = [...councilAddresses];
+    newAddresses[index] = event.target.value;
+    setCouncilAddresses(newAddresses);
+  };
+
+  const removeCouncil = (index: number): void => {
+    const newAddresses = councilAddresses.filter((_, i) => i !== index);
+    setCouncilAddresses(newAddresses);
+  };
+
+  const handleAddAddress = () => {
+    setCouncilAddresses([...councilAddresses, ""]);
+  };
 
   const handleDeploy = () => {
     if (write) {
@@ -120,30 +145,6 @@ export default function Home() {
     getChain();
   }, []);
 
-  // useEffect(() => {
-  //   const getChain = async () => {
-  //     setWalletAddress(address as string);
-  //     const client = await getWalletClient();
-  //     console.log(client);
-  //     if (!client) return;
-  //     const chainId = await client.getChainId();
-  //     if (!chainId) {
-  //       alert("Please connect wallet");
-  //       return;
-  //     }
-  //     setChainId(chainId);
-  //     const contractAddress = envConfigMappings[chainId];
-  //     if (!contractAddress) {
-  //       alert("Chain not supported");
-  //       return;
-  //     }
-  //     setMailboxAddress(contractAddress.mailbox_address);
-  //     setGasPayMaster(contractAddress.pay_master_address);
-  //     setFactoryAddress(contractAddress.factory_address);
-  //   };
-  //   getChain();
-  // }, []);
-
   return (
     <div className="h-[2000px] bg-gradient-to-r from-rose-100 to-teal-100">
       <div className="flex flex-col px-[100px]">
@@ -151,14 +152,11 @@ export default function Home() {
         <div>
           <ConnectButton />
         </div>
-        <div className="my-[10px]">
-          <Button onClick={handleDeploy}>Deploy Governance</Button>
-        </div>
         <div>
-          <h2>IERC20 Token Address</h2>
+          <h2>DAO Name</h2>
           <Input
             onChange={(e) => {
-              setErc20(e.target.value);
+              setName(e.target.value);
             }}
           />
         </div>
@@ -171,7 +169,36 @@ export default function Home() {
             }}
           />
         </div>
-
+        <div>
+          <h2>IERC20 Token Address</h2>
+          <Input
+            onChange={(e) => {
+              setErc20(e.target.value);
+            }}
+          />
+        </div>
+        <div>
+          {councilAddresses.map((address, index) => (
+            <div key={index}>
+              <h2>{index + 1}. Council Address</h2>
+              <div className="flex">
+                <Input
+                  type="text"
+                  placeholder="Enter council address"
+                  value={address}
+                  onChange={(event) => handleInputChange(index, event)}
+                />
+                <Button onClick={() => removeCouncil(index)}>Remove</Button>
+              </div>
+            </div>
+          ))}
+          <div className="my-[5px]">
+            <Button onClick={handleAddAddress}>Add Council Address</Button>
+          </div>
+        </div>
+        <div className="my-[10px]">
+          <Button onClick={handleDeploy}>Deploy Governance</Button>
+        </div>
         <div>
           {isLoading ? (
             <p>Loading...</p>

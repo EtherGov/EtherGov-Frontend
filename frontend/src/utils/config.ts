@@ -8,7 +8,7 @@ export const envConfigMappings: {
 } = {
   11155111: {
     chainId: 11155111,
-    factory_address: "0x41f900be467060a3af9f02ffb44e36f0cebb02a3",
+    factory_address: "0x4b4526247b7890ef5f8844de4dd9bf42fa420f4a",
     mailbox_address: "0xCC737a94FecaeC165AbCf12dED095BB13F037685",
     pay_master_address: "0x8f9C3888bFC8a5B25AED115A82eCbb788b196d2a",
   },

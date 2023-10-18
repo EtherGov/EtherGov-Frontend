@@ -11,13 +11,14 @@ import {
 
 interface CardGovernanceProps {
   address: string;
+  name: string;
 }
 
-export const CardGovernance = ({ address }: CardGovernanceProps) => {
+export const CardGovernance = ({ address, name }: CardGovernanceProps) => {
   return (
     <Card>
       <CardHeader>
-        <Heading size="md">Governance</Heading>
+        <Heading size="md">{name}</Heading>
       </CardHeader>
       <CardBody>
         <Stack divider={<StackDivider />} spacing="4">
