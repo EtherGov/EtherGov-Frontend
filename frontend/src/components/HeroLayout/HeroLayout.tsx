@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import React, { useState } from "react";
 import { Text } from "@chakra-ui/react";
 import router from "next/router";
+import { FaPlus, FaSearch } from 'react-icons/fa';
 import Image from "next/image";
 import logo from "../../../public/EtherGov_Logo.png";
 
@@ -12,7 +13,7 @@ const HeroLayout = () => {
   const handleBrowseRoute = () => {
     router.push("/Marketplace");
   };
-
+  // bg-gradient-to-r from-rose-200 to-teal-200
   return (
     <div className="h-screen flex flex-col items-center bg-gradient-to-r from-rose-200 to-teal-200">
       <Image
@@ -33,16 +34,18 @@ const HeroLayout = () => {
       </div>
       <div className="space-y-4">
         <button
-          className="w-full py-4 px-6 border-4 border-slate-300 bg-transparent text-lg text-gray-500 font-semibold rounded-lg shadow-md hover:bg-teal-50 active:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-opacity-50"
+          className="w-full py-4 px-32 border-4 border-slate-300 bg-transparent text-xl text-gray-500 font-semibold rounded-lg shadow-md hover:bg-teal-50 active:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-opacity-50 flex items-center justify-center"
           onClick={handleCreateRoute}
         >
-          Create New DATs
+          <FaPlus className="mr-4" />
+          <span>Create New DATs</span>
         </button>
         <button
-          className="w-full py-4 px-6 border-4 border-slate-300 bg-transparent text-lg text-gray-500 font-semibold rounded-lg shadow-md hover:bg-teal-50 active:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-opacity-50"
+          className="w-full py-4 px-32 border-4 border-slate-300 bg-transparent text-xl text-gray-500 font-semibold rounded-lg shadow-md hover:bg-teal-50 active:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-opacity-50 flex items-center justify-center"
           onClick={handleBrowseRoute}
         >
-          Browse DATs
+          <FaSearch className="mr-4" />
+          <span>Browse DATs</span>
         </button>
       </div>
     </div>
