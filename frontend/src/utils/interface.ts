@@ -6,3 +6,12 @@ export interface Config {
     SALT_NONCE: number;
   };
 }
+
+export interface SafeWallet {
+  contract_address: string;
+  created_at: string;
+  owners: string[];
+  hub_module: string;
+  hub_contract_address: string;
+  hub_guardian: string;
+}

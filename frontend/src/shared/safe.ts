@@ -1,5 +1,5 @@
 import { Config } from "@/utils/interface";
-import {
+import Safe, {
   EthersAdapter,
   SafeAccountConfig,
   SafeFactory,
@@ -46,7 +46,6 @@ export async function createMultisig(config: Config) {
     saltNonce: saltNonce.toString(),
     callback,
   });
-
   const safeAddress = await safe.getAddress();
 
   console.log("Deployed Safe:", safeAddress);
@@ -55,28 +54,66 @@ export async function createMultisig(config: Config) {
 }
 
 //Add Module
-export async function addModule(safeAddress: string, moduleAddress: string) {
+// export async function addModule(safeAddress: string, moduleAddress: string) {
+//   // try {
+//   //   const provider = new ethers.providers.Web3Provider(window.ethereum);
+//   //   const signer = provider.getSigner();
+
+//   //   const abi = [
+//   //     {
+//   //       constant: true,
+//   //       inputs: [{ name: "", type: "address" }],
+//   //       name: "enableModule",
+//   //       payable: false,
+//   //       type: "function",
+//   //     },
+//   //   ];
+
+//   //   const contract = new Contract(safeAddress, abi, signer);
+//   //   console.log(contract);
+//   //   const tx = await contract.enableModule(moduleAddress);
+//   //   console.log(tx);
+//   //   const result = await tx.wait();
+//   //   console.log(result);
+//   //   return result;
+//   // } catch (e) {
+//   //   console.log(e);
+//   //   throw new Error("Error adding module");
+//   // }
+//   try {
+//     const provider = new ethers.providers.Web3Provider(window.ethereum);
+//     const signer = provider.getSigner();
+//     const ethAdapter = new EthersAdapter({
+//       ethers,
+//       signerOrProvider: signer,
+//     });
+//     const safe = await Safe.create({
+//       ethAdapter,
+//       safeAddress: safeAddress,
+//     });
+
+//     const enableModule = await safe.
+//   } catch (e) {}
+// }
+
+//Add Module to DB
+export async function addModuleToDB(
+  moduleAddress: string,
+  safeAddress: string
+) {
   try {
-    const provider = new ethers.providers.Web3Provider(window.ethereum);
-    const signer = provider.getSigner();
-
-    const abi = [
-      {
-        constant: true,
-        inputs: [{ name: "", type: "address" }],
-        name: "enableModule",
-        payable: false,
-        type: "function",
-      },
-    ];
-
-    const contract = new Contract(safeAddress, abi, signer);
-    const tx = await contract.enableModule(moduleAddress);
-    const result = await tx.wait();
-    console.log(result);
-    return result;
+    const result = await supabase
+      .from("multisig_array")
+      .update({
+        hub_contract_address: moduleAddress,
+      })
+      .eq("contract_address", safeAddress);
+    if (!result) {
+      throw new Error("Error saving safe address");
+    }
+    console.log(result.data);
   } catch (e) {
-    throw new Error("Error adding module");
+    throw new Error("Error saving safe address");
   }
 }
 
@@ -106,6 +143,38 @@ export async function getSafeAddress(owners: string[]) {
     }
     console.log(result.data);
     return result.data[0].contract_address;
+  } catch (e) {
+    throw new Error("Error getting safe address");
+  }
+}
+
+export async function getSafeAddressArray(owners: string[]) {
+  try {
+    const result = await supabase
+      .from("multisig_array")
+      .select("*")
+      .contains("owners", owners);
+    if (!result.data) {
+      throw new Error("No safe address found");
+    }
+    console.log(result.data);
+    return result.data;
+  } catch (e) {
+    throw new Error("Error getting safe address");
+  }
+}
+
+export async function getSafeAddressBySafeAddress(safeAddress: string) {
+  try {
+    const result = await supabase
+      .from("multisig_array")
+      .select("*")
+      .eq("contract_address", safeAddress);
+    if (!result.data) {
+      throw new Error("No safe address found");
+    }
+    console.log(result.data);
+    return result.data[0];
   } catch (e) {
     throw new Error("Error getting safe address");
   }

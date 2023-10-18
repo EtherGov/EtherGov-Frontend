@@ -10,6 +10,7 @@ import {
   zora,
   goerli,
   sepolia,
+  polygonMumbai,
 } from "viem/chains";
 import { configureChains, mainnet, createConfig, WagmiConfig } from "wagmi";
 import { alchemyProvider } from "wagmi/providers/alchemy";
@@ -18,7 +19,7 @@ import { ChakraProvider } from "@chakra-ui/react";
 import { env } from "@/shared/environment";
 
 const { chains, publicClient } = configureChains(
-  [mainnet, polygon, optimism, arbitrum, base, zora, goerli, sepolia],
+  [goerli, sepolia, polygonMumbai],
   [
     alchemyProvider({
       apiKey: env.alchemyKey,
@@ -42,7 +43,7 @@ export default function App({ Component, pageProps }: AppProps) {
     <WagmiConfig config={wagmiConfig}>
       <RainbowKitProvider chains={chains}>
         <ChakraProvider>
-          <Component {...pageProps} />;
+          <Component {...pageProps} />
         </ChakraProvider>
       </RainbowKitProvider>
     </WagmiConfig>
