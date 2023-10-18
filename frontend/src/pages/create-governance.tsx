@@ -16,7 +16,7 @@ import {
   Select,
 } from "@chakra-ui/react";
 import { env } from "@/shared/environment";
-import GovernanceFactory from "../../../public/GovernanceFactory.json";
+import GovernanceFactory from "../../public/GovernanceFactory.json";
 import { getWalletClient, watchContractEvent } from "wagmi/actions";
 import { envConfigMappings } from "@/utils/config";
 import { watch } from "fs";
@@ -171,13 +171,6 @@ export default function Home() {
             }}
           />
         </div>
-        {/* <div>
-          {isLoading || (!isLoading && !governanceAddress) ? (
-            <p>Loading...</p>
-          ) : (
-            <p>{governanceAddress}</p>
-          )}
-        </div> */}
 
         <div>
           {isLoading ? (
