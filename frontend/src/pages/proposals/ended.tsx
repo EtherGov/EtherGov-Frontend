@@ -1,5 +1,5 @@
 import React from "react";
-import Sidebar from "../components/SideBar";
+import Sidebar from "../../components/SideBar/SideBar";
 
 export default function Ended() {
   return (
