@@ -17,6 +17,7 @@ import { alchemyProvider } from "wagmi/providers/alchemy";
 import { publicProvider } from "wagmi/providers/public";
 import { ChakraProvider } from "@chakra-ui/react";
 import { env } from "@/shared/environment";
+import Navbar from "@/components/Navbar/Navbar";
 
 const { chains, publicClient } = configureChains(
   [goerli, sepolia, polygonMumbai],
@@ -43,6 +44,7 @@ export default function App({ Component, pageProps }: AppProps) {
     <WagmiConfig config={wagmiConfig}>
       <RainbowKitProvider chains={chains}>
         <ChakraProvider>
+          <Navbar />
           <Component {...pageProps} />
         </ChakraProvider>
       </RainbowKitProvider>
