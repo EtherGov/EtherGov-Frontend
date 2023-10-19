@@ -7,8 +7,13 @@ import Image from "next/image";
 import logo from "../../../public/EtherGov_Logo.png";
 import { useAccount } from "wagmi";
 import { useToast } from "@chakra-ui/react";
+import ConnectComethWallet from "@/bjk-components/comethConnectWallet";
+import { useWalletAuth } from "@/bjk-components/comethWalletAuth";
+
 
 const HeroLayout = () => {
+  const { isConnecting:isComethConnecting, isConnected, connect, connectionError, wallet } = useWalletAuth();
+
   const router = useRouter();
   const { address, isConnecting, isDisconnected } = useAccount();
 
@@ -75,6 +80,14 @@ const HeroLayout = () => {
           <span>Browse DATs</span>
         </button>
       </div>
+
+      <ConnectComethWallet 
+        isConnected={isConnected}
+        isConnecting={isComethConnecting}
+        connect={connect}
+        connectionError={connectionError}
+        wallet={wallet!}
+      />
     </div>
   );
 };
