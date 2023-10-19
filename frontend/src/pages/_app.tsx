@@ -20,7 +20,7 @@ import { env } from "@/shared/environment";
 import Navbar from "@/components/Navbar/Navbar";
 
 const { chains, publicClient } = configureChains(
-  [goerli, sepolia, polygonMumbai],
+  [sepolia, goerli, polygonMumbai],
   [
     alchemyProvider({
       apiKey: env.alchemyKey,

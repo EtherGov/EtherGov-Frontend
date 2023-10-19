@@ -148,57 +148,73 @@ export default function Home() {
   return (
     <div className="h-[2000px] bg-gradient-to-r from-rose-100 to-teal-100">
       <div className="flex flex-col px-[100px]">
-        <div>Create Governance</div>
+        {/* INPUT */}
         <div>
-          <ConnectButton />
-        </div>
-        <div>
-          <h2>DAO Name</h2>
-          <Input
-            onChange={(e) => {
-              setName(e.target.value);
-            }}
-          />
-        </div>
-        <div>
-          <h2>Minimum Vote</h2>
-          <Input
-            type="number"
-            onChange={(e) => {
-              setMinimumVotes(Number(e.target.value));
-            }}
-          />
-        </div>
-        <div>
-          <h2>IERC20 Token Address</h2>
-          <Input
-            onChange={(e) => {
-              setErc20(e.target.value);
-            }}
-          />
-        </div>
-        <div>
-          {councilAddresses.map((address, index) => (
-            <div key={index}>
-              <h2>{index + 1}. Council Address</h2>
-              <div className="flex">
-                <Input
-                  type="text"
-                  placeholder="Enter council address"
-                  value={address}
-                  onChange={(event) => handleInputChange(index, event)}
-                />
-                <Button onClick={() => removeCouncil(index)}>Remove</Button>
+          <h1 className=" mt-5 text-4xl font-bold ">Create Governance</h1>
+          <hr className="my-4 border-t-4  border-gray-400 w-full"/>
+          <br />
+
+          <div>
+            <h2>DAO Name</h2>
+            <input
+            className="w-96 py-2 px-4 border-2 border-black bg-transparent focus:outline-none focus:border-gray-400 rounded-xl"
+
+              onChange={(e) => {
+                setName(e.target.value);
+              }}
+            />
+          </div>
+          <br />
+
+          <div>
+            <h2>Minimum Vote</h2>
+            <input
+              className="w-96 py-2 px-4 border-2 border-black bg-transparent focus:outline-none focus:border-gray-400 rounded-xl"
+              type="number"
+              onChange={(e) => {
+                setMinimumVotes(Number(e.target.value));
+              }}
+            />
+          </div>
+          <br />
+
+          <div>
+            <h2>IERC20 Token Address</h2>
+            <input
+              className="w-96 py-2 px-4 border-2 border-black bg-transparent focus:outline-none focus:border-gray-400 rounded-xl"
+              onChange={(e) => {
+                setErc20(e.target.value);
+              }}
+            />
+          </div>
+
+          <div>
+            {councilAddresses.map((address, index) => (
+              <div key={index}>
+                <br />
+                <h2>{index + 1}. Council Address</h2>
+                <div className="flex">
+                  <input
+                    className="w-96 py-2 px-4 border-2 border-black bg-transparent focus:outline-none focus:border-gray-400 rounded-xl"
+                    type="text"
+                    placeholder="Enter council address"
+                    value={address}
+                    onChange={(event) => handleInputChange(index, event)}
+                  />
+                  <Button className=" ml-5" onClick={() => removeCouncil(index)}>Remove</Button>
+                </div>
               </div>
+            ))}
+            <div className=" my-[30px]">
+              <Button onClick={handleAddAddress}>Add Council Address</Button>
             </div>
-          ))}
-          <div className="my-[5px]">
-            <Button onClick={handleAddAddress}>Add Council Address</Button>
+          </div>
+          <div className="my-[10px]">
+            <Button onClick={handleDeploy}>Deploy Governance</Button>
           </div>
         </div>
-        <div className="my-[10px]">
-          <Button onClick={handleDeploy}>Deploy Governance</Button>
-        </div>
+
+        {/* RENDER GOVERNANCE ADDRESS */}
         <div>
           {isLoading ? (
             <p>Loading...</p>
@@ -219,6 +235,8 @@ export default function Home() {
             <p></p>
           )}
         </div>
+
+        {/* RENDER GAS TANK ADDRESS */}
         <div>
           {governanceAddress ? (
             <div>
