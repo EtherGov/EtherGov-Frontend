@@ -12,6 +12,8 @@
     "@chakra-ui/react": "^2.8.1",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
+    "@headlessui/react": "^1.7.17",
+    "@heroicons/react": "^2.0.18",
     "@lit-protocol/auth-browser": "^2.2.61",
     "@lit-protocol/lit-node-client": "^2.2.61",
     "@rainbow-me/rainbowkit": "^1.1.1",
