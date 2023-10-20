@@ -134,7 +134,7 @@ export default function InitDat() {
 
   return (
     <div className="flex justify-center">
-      <div className="mt-[30px] w-[900px] rounded-3xl  bg-gradient-to-r from-rose-100 to-teal-100">
+      <div className="mt-[30px] w-[900px] rounded-3xl bg-white">
         <div className="flex flex-col px-[100px]">
           {/* INPUT */}
           <div>
@@ -143,13 +143,13 @@ export default function InitDat() {
             <br />
 
             <div className="flex items-center gap-4">
-                <h2 className=" text-xl font-medium">DAO Name</h2>
-                <input
-                  className="w-[585px] py-2 px-4 border-2 border-black bg-transparent focus:outline-none focus:border-gray-400 rounded-xl"
-                  onChange={(e) => {
-                    setName(e.target.value);
-                  }}
-                />
+              <h2 className=" text-xl font-medium">DAO Name</h2>
+              <input
+                className="w-[585px] py-2 px-4 border-2 border-black bg-transparent focus:outline-none focus:border-gray-400 rounded-xl"
+                onChange={(e) => {
+                  setName(e.target.value);
+                }}
+              />
             </div>
             <br />
 
@@ -179,7 +179,9 @@ export default function InitDat() {
               {councilAddresses.map((address, index) => (
                 <div key={index}>
                   <br />
-                  <h2 className=" text-xl font-medium">{index + 1}. Council Address</h2>
+                  <h2 className=" text-xl font-medium">
+                    {index + 1}. Council Address
+                  </h2>
                   <div className="flex">
                     <input
                       className="w-[590px] py-2 px-4 border-2 border-black bg-transparent focus:outline-none focus:border-gray-400 rounded-xl"
@@ -189,7 +191,9 @@ export default function InitDat() {
                       onChange={(event) => handleInputChange(index, event)}
                     />
                     <Button
-                      className=" ml-5"
+                      bg="black"
+                      color="white"
+                      className="ml-5"
                       onClick={() => removeCouncil(index)}
                     >
                       Remove
@@ -198,11 +202,11 @@ export default function InitDat() {
                 </div>
               ))}
               <div className=" my-[30px]">
-                <Button onClick={handleAddAddress}>Add Council Address</Button>
+                <Button bg="black" color="white" onClick={handleAddAddress}>Add Council Address</Button>
               </div>
             </div>
             <div className="my-[10px]">
-              <Button onClick={handleDeploy}>Deploy Governance</Button>
+              <Button bg="black" color="white" onClick={handleDeploy}>Deploy Governance</Button>
             </div>
           </div>
 

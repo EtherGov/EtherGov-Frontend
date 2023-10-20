@@ -146,7 +146,7 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="h-[2000px] bg-gradient-to-r from-rose-100 to-teal-100">
+    <div className="h-[2000px] bg-white">
       <div className="flex flex-col px-[100px]">
         {/* INPUT */}
         <div>
@@ -201,16 +201,16 @@ export default function Home() {
                     value={address}
                     onChange={(event) => handleInputChange(index, event)}
                   />
-                  <Button className=" ml-5" onClick={() => removeCouncil(index)}>Remove</Button>
+                  <Button bg="black" color="white" _hover={{ opacity: 0.7 }} className="ml-5" onClick={() => removeCouncil(index)}>Remove</Button>
                 </div>
               </div>
             ))}
             <div className=" my-[30px]">
-              <Button onClick={handleAddAddress}>Add Council Address</Button>
+              <Button bg="black" color="white" _hover={{ opacity: 0.7 }} onClick={handleAddAddress}>Add Council Address</Button>
             </div>
           </div>
           <div className="my-[10px]">
-            <Button onClick={handleDeploy}>Deploy Governance</Button>
+            <Button bg="black" color="white" _hover={{ opacity: 0.7 }} onClick={handleDeploy}>Deploy Governance</Button>
           </div>
         </div>
 

@@ -1,7 +1,7 @@
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import Link from "next/link";
 import Image from "next/image";
-import logo from "../../../public/EtherGov_Logo.png";
+import logo from "../../../public/EtherGovLogo_Navbar.jpeg"
 import router, { useRouter } from "next/router";
 import { useAccount } from "wagmi";
 import { useToast } from "@chakra-ui/react";
@@ -53,19 +53,19 @@ const Navbar = () => {
   };
 
   return (
-    <div className="h-[70px] flex justify-between items-center bg-gradient-to-r from-rose-200 to-teal-200">
+    <div className="h-[70px] flex justify-between items-center bg-black">
       <Link href={"/"} className="ml-[30px]" onClick={handleHomeRoute}>
         <Image src={logo} alt="" width={60} height={60} />
       </Link>
       <div className="flex items-center gap-4 mr-[30px]">
         <button
-          className="w-[140px] bg-green-main hover:bg-green-main text-black font-semibold py-2 px-4 rounded-full"
+          className="w-[140px] bg-green-main hover:bg-green-main text-white font-semibold py-2 px-4 rounded-full"
           onClick={handleCreateRoute}
         >
           Create DATs
         </button>
         <button
-          className="w-[180px] bg-green-main hover:bg-green-main text-black font-semibold py-2 px-4 rounded-full"
+          className="w-[180px] bg-green-main hover:bg-green-main text-white font-semibold py-2 px-4 rounded-full"
           onClick={handleBrowseRoute}
         >
           Browse DATs

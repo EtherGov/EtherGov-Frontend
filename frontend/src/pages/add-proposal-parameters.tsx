@@ -13,7 +13,7 @@ function AddProposalParameter() {
       <div className="mt-8 w-1/2 mx-auto">
         <Card className="my-8 p-8 mx-auto justify-center">
           <h1 className="text-3xl font-semibold text-left justify-center">
-            New Proposal: DAT Parameters
+            New Proposal: DAO Parameters
           </h1>
           <Divider colorScheme="gray" className="my-4" />
           <h1 className="text-xl font-semibold text-left justify-center mt-2">

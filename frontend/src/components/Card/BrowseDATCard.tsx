@@ -17,7 +17,7 @@ const BrowseDATCard = ({ imgLink, daoName, onClickButton}: Props) => {
     >
       <CardBody className="items-center justify-center mx-auto">
         <Stack spacing={4} alignItems="center" justifyContent="center">
-          <Image src={imgLink} alt="DAT Logo Image" width={200} height={250} />
+          <Image src={imgLink} alt="DAO Logo Image" width={200} height={250} />
           <text className="text-xl font-semibold">
             {daoName}
           </text>
