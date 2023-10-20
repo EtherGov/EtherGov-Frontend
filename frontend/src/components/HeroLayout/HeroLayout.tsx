@@ -30,7 +30,7 @@ const HeroLayout = () => {
       });
       return;
     }
-    router.push("/");
+    router.push("/init-dat");
   };
   const handleBrowseRoute = () => {
     if (isDisconnected) {
