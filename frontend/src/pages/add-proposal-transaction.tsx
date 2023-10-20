@@ -11,7 +11,7 @@ import ModalSpark from "@/components/Modal/ModalSpark";
 import ModalERC20 from "@/components/Modal/ModalERC20";
 import ModalCustomPayload from "@/components/Modal/ModalCustomPayload";
 
-function AddProposal() {
+function AddProposalTransaction() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [payload, setPayload] = useState("");
@@ -53,14 +53,14 @@ function AddProposal() {
     setIsOpenCustomPayload(true);
   };
 
-  const handleTest = () => {};
+  const handleTest = () => {}; //function kosong buat tes program biar jalan aja
 
   return (
     <div className="h-full">
       <div className="mt-8 w-2/3 mx-auto">
         <Card className="my-8 p-8 mx-auto justify-center">
           <h1 className="text-3xl font-semibold text-left justify-center">
-            New Proposal
+            New Proposal: DAT Transaction
           </h1>
           <Divider colorScheme="gray" className="my-4" />
           <div className="flex flex-row w-full my-1">
@@ -71,9 +71,8 @@ function AddProposal() {
             </div>
             <div className="w-3/4 p-2 bg-transparent">
               <Input
-                className="text-sm font-medium text-right"
-                htmlSize={70}
-                width="auto"
+                className="w-full text-sm font-medium text-right"
+                width="full"
                 variant="outline"
                 borderColor="gray"
                 placeholder="Title..."
@@ -92,7 +91,7 @@ function AddProposal() {
               <Textarea
                 className="text-sm font-medium text-right"
                 rows={4}
-                cols={70}
+                width="full"
                 variant="outline"
                 borderColor="gray"
                 placeholder="Description..."
@@ -132,13 +131,13 @@ function AddProposal() {
             <ModalSpark
               isOpenModal={isOpenSpark}
               onCloseModal={() => setIsOpenSpark(false)}
-              OnClickGeneratePayloadMarket={handleTest}
-              OnClickGeneratePayloadsDAI={handleTest}
+              OnClickGeneratePayloadMarket={handleTest} //Change to real function
+              OnClickGeneratePayloadsDAI={handleTest} //Change to real function
             />
             <ModalERC20
               isOpenModal={isOpenERC20}
               onCloseModal={() => setIsOpenERC20(false)}
-              OnClickGeneratePayload={handleTest}
+              OnClickGeneratePayload={handleTest} //Change to real function
             />
           </div>
           <div className="flex flex-row w-full my-1">
@@ -150,8 +149,7 @@ function AddProposal() {
             <div className="w-8/12 p-2 bg-transparent">
               <Input
                 className="text-sm font-medium text-right"
-                htmlSize={60}
-                width="auto"
+                width="100%"
                 variant="outline"
                 borderColor="gray"
                 placeholder="Payload..."
@@ -165,7 +163,7 @@ function AddProposal() {
             <ModalCustomPayload
               isOpenModal={isOpenCustomPayload}
               onCloseModal={() => setIsOpenCustomPayload(false)}
-              OnClickConfirm={handleTest}
+              OnClickConfirm={handleTest} //Change to real function
             />
           </div>
           <div className="flex flex-row w-full my-1">
@@ -177,8 +175,7 @@ function AddProposal() {
             <div className="w-3/4 p-2 bg-transparent mt-3">
               <Input
                 className="text-sm font-medium text-right"
-                htmlSize={70}
-                width="auto"
+                width="full"
                 variant="outline"
                 borderColor="gray"
                 placeholder="Minimum Quorum..."
@@ -238,4 +235,4 @@ function AddProposal() {
   );
 }
 
-export default AddProposal;
+export default AddProposalTransaction;
