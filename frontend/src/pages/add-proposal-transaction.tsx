@@ -158,7 +158,7 @@ function AddProposalTransaction() {
               />
             </div>
             <div className="w-1/12 p-2 bg-transparent">
-              <Button onClick={handlePlusButtonClick}>+</Button>
+              <Button bg="black" color="white" onClick={handlePlusButtonClick}>+</Button>
             </div>
             <ModalCustomPayload
               isOpenModal={isOpenCustomPayload}

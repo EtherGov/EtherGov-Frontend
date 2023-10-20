@@ -31,7 +31,7 @@ function AddProposalParameter() {
               />
             </div>
             <div className="w-1/12 p-2 bg-transparent">
-              <Button>+</Button>
+              <Button bg="black" color="white">+</Button>
             </div>
           </div>
           <div className="flex flex-row w-full my-1">
@@ -46,7 +46,7 @@ function AddProposalParameter() {
               />
             </div>
             <div className="w-1/12 p-2 bg-transparent">
-              <Button>-</Button>
+              <Button bg="black" color="white">-</Button>
             </div>
           </div>
           <h1 className="text-xl font-semibold text-left justify-center mt-2">
@@ -64,7 +64,7 @@ function AddProposalParameter() {
               />
             </div>
             <div className="w-1/12 p-2 bg-transparent">
-              <Button>+</Button>
+              <Button bg="black" color="white">+</Button>
             </div>
           </div>
           <div className="flex flex-row w-full my-1">
@@ -79,7 +79,7 @@ function AddProposalParameter() {
               />
             </div>
             <div className="w-1/12 p-2 bg-transparent">
-              <Button>-</Button>
+              <Button bg="black" color="white">-</Button>
             </div>
           </div>
           <h1 className="text-xl font-semibold text-left justify-center mt-2">
@@ -99,7 +99,7 @@ function AddProposalParameter() {
               />
             </div>
             <div className="w-1/12 p-2 bg-transparent">
-              <Button>+</Button>
+              <Button bg="black" color="white">+</Button>
             </div>
           </div>
           <div className="flex flex-row w-full my-1">
@@ -114,7 +114,7 @@ function AddProposalParameter() {
               />
             </div>
             <div className="w-1/12 p-2 bg-transparent">
-              <Button>-</Button>
+              <Button bg="black" color="white">-</Button>
             </div>
           </div>
           <div className="flex flex-row w-1/2 mt-6 mx-auto">

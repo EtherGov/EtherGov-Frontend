@@ -43,14 +43,14 @@ function ExplorePage() {
         <input
           type="search"
           placeholder="Browse DATs..."
-          className="w-1/2 mx-0 p-4 rounded-lg items-center border-2 border-gray-400 bg-transparent relative"
+          className="w-1/2 mx-0 p-4 rounded-lg items-center border-2 border-black bg-transparent relative"
           // onChange={(e) => handleSearch(e)}
         />
         <button
           className="bg-transparent rounded-full p-4"
           // onClick={handleSearchButtonClick}
         >
-          <AiOutlineSearch className="text-3xl text-gray-400" />
+          <AiOutlineSearch className="text-3xl text-black" />
         </button>
       </div>
       <div className="m-8 container w-2/3 mx-auto grid grid-cols-2 gap-8 justify-center items-center">
