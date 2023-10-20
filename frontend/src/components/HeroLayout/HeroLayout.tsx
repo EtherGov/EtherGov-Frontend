@@ -7,8 +7,9 @@ import Image from "next/image";
 import logo from "../../../public/EtherGov_Logo.png";
 import { useAccount } from "wagmi";
 import { useToast } from "@chakra-ui/react";
-import ConnectComethWallet from "@/bjk-components/comethConnectWallet";
-import { useWalletAuth } from "@/bjk-components/comethWalletAuth";
+import ConnectComethWallet from "@/components/Cometh/comethConnectWallet";
+import { useWalletAuth } from "@/components/Cometh/comethWalletAuth";
+import SismoConnectFunction from "../Sismo/SismoConnect";
 
 
 const HeroLayout = () => {
@@ -88,6 +89,8 @@ const HeroLayout = () => {
         connectionError={connectionError}
         wallet={wallet!}
       />
+
+      <SismoConnectFunction/>
     </div>
   );
 };

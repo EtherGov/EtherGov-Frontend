@@ -9,5 +9,5 @@ export const walletAdaptor = new ConnectAdaptor({
 export const comethWallet = new ComethWallet({
   authAdapter: walletAdaptor,
   apiKey:env.comethKey,
-  rpcUrl: "https://polygon-rpc.com",
+  rpcUrl: "https://rpc-mumbai.matic.today",
 });

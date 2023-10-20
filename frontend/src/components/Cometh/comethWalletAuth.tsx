@@ -51,6 +51,8 @@ export function useWalletAuth() {
 
         const instanceProvider = new ComethProvider(comethWallet!);
 
+        //Governance, stakeAndVote
+
         // const contract = new ethers.Contract(
         //     PAYOUT_CONTRACT_ADDRESS,
         //     payoutABI,
