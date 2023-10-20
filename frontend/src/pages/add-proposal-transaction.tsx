@@ -7,21 +7,38 @@ import {
   useContractRead,
   usePrepareContractWrite,
 } from "wagmi";
+import ModalSpark from "@/components/Modal/ModalSpark";
+import ModalERC20 from "@/components/Modal/ModalERC20";
+import ModalCustomPayload from "@/components/Modal/ModalCustomPayload";
 
-function AddProposal() {
-
+function AddProposalTransaction() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [destinationChain, setDestinationChain] = useState("");
   const [payload, setPayload] = useState("");
   const [quorum, setQuorum] = useState("");
 
-  const [selectedTxnPresets, setSelectedTxnPresets] = useState("Spark Protocol");
+  const [selectedDestinationChain, setSelectedDestinationChain] =
+    useState("Mumbai");
+  const [selectedTxnPresets, setSelectedTxnPresets] =
+    useState("Spark Protocol");
   const [selectedSismoDataGroup, setSelectedSismoDataGroup] = useState("-");
   const [selectedERC20Power, setSelectedERC20Power] = useState("-");
 
+  const [isOpenSpark, setIsOpenSpark] = useState(false);
+  const [isOpenERC20, setIsOpenERC20] = useState(false);
+  const [isOpenCustomPayload, setIsOpenCustomPayload] = useState(false);
+
+  const handleChainChange = (newDuration: any) => {
+    setSelectedDestinationChain(newDuration);
+  };
+
   const handleTxnChange = (newDuration: any) => {
     setSelectedTxnPresets(newDuration);
+    if (newDuration === "Spark Protocol") {
+      setIsOpenSpark(true);
+    } else if (newDuration === "Send ERC20 / NFTs") {
+      setIsOpenERC20(true);
+    }
   };
 
   const handleSismoChange = (newDuration: any) => {
@@ -32,12 +49,18 @@ function AddProposal() {
     setSelectedERC20Power(newDuration);
   };
 
+  const handlePlusButtonClick = () => {
+    setIsOpenCustomPayload(true);
+  };
+
+  const handleTest = () => {}; //function kosong buat tes program biar jalan aja
+
   return (
     <div className="h-full">
       <div className="mt-8 w-2/3 mx-auto">
         <Card className="my-8 p-8 mx-auto justify-center">
           <h1 className="text-3xl font-semibold text-left justify-center">
-            New Proposal
+            New Proposal: DAT Transaction
           </h1>
           <Divider colorScheme="gray" className="my-4" />
           <div className="flex flex-row w-full my-1">
@@ -48,9 +71,8 @@ function AddProposal() {
             </div>
             <div className="w-3/4 p-2 bg-transparent">
               <Input
-                className="text-sm font-medium text-right"
-                htmlSize={70}
-                width="auto"
+                className="w-full text-sm font-medium text-right"
+                width="full"
                 variant="outline"
                 borderColor="gray"
                 placeholder="Title..."
@@ -69,7 +91,7 @@ function AddProposal() {
               <Textarea
                 className="text-sm font-medium text-right"
                 rows={4}
-                cols={70}
+                width="full"
                 variant="outline"
                 borderColor="gray"
                 placeholder="Description..."
@@ -86,15 +108,10 @@ function AddProposal() {
               </h1>
             </div>
             <div className="w-3/4 p-2 bg-transparent">
-              <Input
-                className="text-sm font-medium text-right"
-                htmlSize={70}
-                width="auto"
-                variant="outline"
-                borderColor="gray"
-                placeholder="Destination Chain..."
-                value={destinationChain}
-                onChange={(e) => setDestinationChain(e.target.value)}
+              <DropdownButtonProfile
+                values={["Mumbai", "Mantle", "Scroll", "Sepolia"]}
+                defaultValue={selectedDestinationChain}
+                onDurationChange={handleChainChange}
               />
             </div>
           </div>
@@ -106,15 +123,22 @@ function AddProposal() {
             </div>
             <div className="w-3/4 p-2 bg-transparent">
               <DropdownButtonProfile
-                values={[
-                  "Spark Protocol",
-                  "Send ERC20 / NFTs",
-                  "Uniswap"
-                ]}
+                values={["Spark Protocol", "Send ERC20 / NFTs", "Uniswap"]}
                 defaultValue={selectedTxnPresets}
                 onDurationChange={handleTxnChange}
               />
             </div>
+            <ModalSpark
+              isOpenModal={isOpenSpark}
+              onCloseModal={() => setIsOpenSpark(false)}
+              OnClickGeneratePayloadMarket={handleTest} //Change to real function
+              OnClickGeneratePayloadsDAI={handleTest} //Change to real function
+            />
+            <ModalERC20
+              isOpenModal={isOpenERC20}
+              onCloseModal={() => setIsOpenERC20(false)}
+              OnClickGeneratePayload={handleTest} //Change to real function
+            />
           </div>
           <div className="flex flex-row w-full my-1">
             <div className="w-1/4 p-2 bg-transparent">
@@ -122,11 +146,10 @@ function AddProposal() {
                 Payload:
               </h1>
             </div>
-            <div className="w-3/4 p-2 bg-transparent">
+            <div className="w-8/12 p-2 bg-transparent">
               <Input
                 className="text-sm font-medium text-right"
-                htmlSize={70}
-                width="auto"
+                width="100%"
                 variant="outline"
                 borderColor="gray"
                 placeholder="Payload..."
@@ -134,6 +157,14 @@ function AddProposal() {
                 onChange={(e) => setPayload(e.target.value)}
               />
             </div>
+            <div className="w-1/12 p-2 bg-transparent">
+              <Button onClick={handlePlusButtonClick}>+</Button>
+            </div>
+            <ModalCustomPayload
+              isOpenModal={isOpenCustomPayload}
+              onCloseModal={() => setIsOpenCustomPayload(false)}
+              OnClickConfirm={handleTest} //Change to real function
+            />
           </div>
           <div className="flex flex-row w-full my-1">
             <div className="w-1/4 p-2 bg-transparent">
@@ -144,8 +175,7 @@ function AddProposal() {
             <div className="w-3/4 p-2 bg-transparent mt-3">
               <Input
                 className="text-sm font-medium text-right"
-                htmlSize={70}
-                width="auto"
+                width="full"
                 variant="outline"
                 borderColor="gray"
                 placeholder="Minimum Quorum..."
@@ -166,7 +196,7 @@ function AddProposal() {
                   "-",
                   "Verified Human",
                   "Twitter Ethereum Influencers",
-                  "Link3 Early Profile Owner"
+                  "Link3 Early Profile Owner",
                 ]}
                 defaultValue={selectedSismoDataGroup}
                 onDurationChange={handleSismoChange}
@@ -181,11 +211,7 @@ function AddProposal() {
             </div>
             <div className="w-3/4 p-2 bg-transparent mt-3">
               <DropdownButtonProfile
-                values={[
-                  "-",
-                  "Yes",
-                  "No"
-                ]}
+                values={["-", "Yes", "No"]}
                 defaultValue={selectedERC20Power}
                 onDurationChange={handleERC20Change}
               />
@@ -209,4 +235,4 @@ function AddProposal() {
   );
 }
 
-export default AddProposal;
+export default AddProposalTransaction;
