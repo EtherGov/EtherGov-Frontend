@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { CardGovernance } from "@/components/Card/CardGovernance";
 import { useRouter } from "next/router";
 import { GovernanceData } from "@/utils/type";
+import { AiOutlineSearch } from "react-icons/ai";
 
 function ExplorePage() {
   const [governances, setGovernances] = useState<{
@@ -38,10 +39,22 @@ function ExplorePage() {
 
   return (
     <div>
-      <div>
-        <h1>Explore Page</h1>
+      <div className="w-full mt-4 flex items-center justify-center">
+        <input
+          type="search"
+          placeholder="Browse DATs..."
+          className="w-1/2 mx-0 p-4 rounded-lg items-center border-2 border-gray-400 bg-transparent relative"
+          // onChange={(e) => handleSearch(e)}
+        />
+        <button
+          className="bg-transparent rounded-full p-4"
+          // onClick={handleSearchButtonClick}
+        >
+          <AiOutlineSearch className="text-3xl text-gray-400" />
+        </button>
       </div>
-      <div>
+      <div className="m-8 container w-2/3 mx-auto grid grid-cols-2 gap-8 justify-center items-center">
+                
         {governances.addresses.length ? (
           governances.addresses.map((address, key) => {
             const name = governances.names[key];

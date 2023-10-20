@@ -44,7 +44,7 @@ const HeroLayout = () => {
       });
       return;
     }
-    router.push("/BrowseDAT");
+    router.push("/explore");
   };
 
   return (
