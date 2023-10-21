@@ -1,65 +1,28 @@
-//use wagmi to call approve function in a contract
+// Setup: npm install alchemy-sdk
+// Github: https://github.com/alchemyplatform/alchemy-sdk-js
+import { env } from "@/shared/environment";
+import { Network, Alchemy } from "alchemy-sdk";
 
-//     uint256 proposalId,
-//     uint256 stakeAmount,
-//     uint256 tokenId
-import { useState } from 'react';
-import { ethers } from 'ethers';
+// Optional Config object, but defaults to demo api-key and eth-mainnet.
+const settings = {
+  apiKey: env.alchemyKey, // Replace with your Alchemy API Key.
+  network: Network.MATIC_MUMBAI, // Replace with your network.
 
-async function FetchNFTs(walletAddress: string, nftContractAddress: string){
-    const [tokenIds, setTokenIds] = useState<string[]>([]);
-    const [error, setError] = useState<string | null>(null);
-
-    // const fetchNFTs = async () => {
-        const provider = new ethers.providers.JsonRpcProvider("https://polygon-mumbai.g.alchemyapi.io/v2/YOUR_ALCHEMY_KEY");
-
-        const erc721ABI = [
-            "function balanceOf(address owner) view returns (uint256)",
-            "function tokenOfOwnerByIndex(address owner, uint256 index) view returns (uint256)"
-        ];
-
-        // const walletAddress = "YOUR_WALLET_ADDRESS";
-        // const nftContractAddress = "YOUR_NFT_CONTRACT_ADDRESS";
-
-        const contract = new ethers.Contract(nftContractAddress, erc721ABI, provider);
-        
-        try {
-            const balance = await contract.balanceOf(walletAddress);
-            const fetchedTokenIds: string[] = [];
-
-            for (let i = 0; i < balance.toNumber(); i++) {
-                const tokenId = await contract.tokenOfOwnerByIndex(walletAddress, i);
-                fetchedTokenIds.push(tokenId.toString());
-            }
-
-            setTokenIds(fetchedTokenIds);
-        } catch (err: any) {
-            setError(err.message);
-        }        
-    // };
-
-    // return (
-    //     <div>
-    //         <button onClick={fetchNFTs}>Fetch My NFTs</button>
-    //         {error && <p>Error: {error}</p>}
-    //         {tokenIds.length > 0 && (
-    //             <ul>
-    //                 {tokenIds.map((tokenId, index) => (
-    //                     <li key={index}>{tokenId}</li>
-    //                 ))}
-    //             </ul>
-    //         )}
-    //     </div>
-    // );
 };
 
-export default function ApproveMetamask(
- proposalId, stakeAmount, tokenId
-) {
-    //Governance contract
-    // function stakeAndVote(
-    //     uint256 proposalId,
-    //     uint256 stakeAmount,
-    //     uint256 tokenId)
-    
-};
+const alchemy = new Alchemy(settings);
+
+// Print all NFTs returned in the response:
+export default async function getAllNFts() {
+    // alchemy.nft.getNftsForOwner("0x547F61FC3B2AC2B21518d660dE20398776d7C755").catch();
+    const nftsForOwner = await alchemy.nft.getNftsForOwner("0x547F61FC3B2AC2B21518d660dE20398776d7C755");
+
+    console.log(nftsForOwner.ownedNfts)
+
+    nftsForOwner.ownedNfts.forEach(item => {
+        // console.log(item.contract.address);
+        if (item.contract.address == "0xC9Fd509E7969DE8Dbc1b5BfBdFc1418d90C27a3b".toLowerCase()) {
+            console.log("Found:", item);
+        }
+    });
+}

@@ -9,6 +9,9 @@ import {
   ComethApprove,
   ComethApproveFunction,
 } from "@/components/Cometh/comethApprove";
+import useFetchNFTs from "@/components/ApproveProposal/approveMetamask";
+import NFTFetcher from "@/components/ApproveProposal/approveMetamask";
+import getAllNFts from "@/components/ApproveProposal/approveMetamask";
 
 //Sismo Group ID
 
@@ -102,9 +105,24 @@ const ProposalZoom: FC = () => {
             />
 
           {/* <ComethGaslessTransaction/> */}
+          <Button
+                bg="black"
+                color="white"
+                _hover={{ opacity: 0.7 }}
+                className="w-1/2 mx-auto my-8 items-center text-center justify-center"
+                // onClick={()=>NFTFetcher()
+                //   ("0x547F61FC3B2AC2B21518d660dE20398776d7C755", "0xC9Fd509E7969DE8Dbc1b5BfBdFc1418d90C27a3b")}
+                onClick={getAllNFts}
+              >
+                get nfts
+              </Button>
 
+            {/* <NFTFetcher walletAddress="0x547F61FC3B2AC2B21518d660dE20398776d7C755"
+            nftContractAddress="0xC9Fd509E7969DE8Dbc1b5BfBdFc1418d90C27a3b" /> */}
+
+              
           <SismoConnectFunction 
-            groupId="0x9bfaf997efdde9a6372fe679f177a5c1"
+            comethGroupId="0xc505a8125fc571896eecdadb908e7706"
             setsismoVerfied={setsismoVerfied}
           />
 
@@ -115,7 +133,7 @@ const ProposalZoom: FC = () => {
                 color="white"
                 _hover={{ opacity: 0.7 }}
                 className="w-1/2 mx-auto my-8 items-center text-center justify-center"
-                onClick={() => ComethApproveFunction()}
+                onClick={() => ComethApproveFunction(1,2)} // proposal id and token id
               >
                 Approve Proposal with Cometh
               </Button>

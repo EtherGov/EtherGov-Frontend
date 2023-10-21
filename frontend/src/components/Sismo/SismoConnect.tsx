@@ -7,26 +7,27 @@ import {
 import {
   CONFIG,
   AUTHS,
-  CLAIMS,
   SIGNATURE_REQUEST,
   AuthType,
   ClaimType,
 } from "../../shared/sismo";
 
 interface SismoConnectFunctionProps {
-  groupId: string; // New parameter
+  comethGroupId: string; // New parameter
 
   setsismoVerfied: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const SismoConnectFunction: FC<SismoConnectFunctionProps> = ({ groupId, setsismoVerfied }) => {
+const SismoConnectFunction: FC<SismoConnectFunctionProps> = ({ comethGroupId, setsismoVerfied }) => {
   const [sismoConnectVerifiedResult, setSismoConnectVerifiedResult] =
     useState<SismoConnectVerifiedResult>();
   const [sismoConnectResponse, setSismoConnectResponse] =
     useState<SismoConnectResponse>();
   const [pageState, setPageState] = useState<string>("init");
   const [error, setError] = useState<string>("");
-
+  console.log("groupId", comethGroupId)
+  const apiString='/api/verify/route?comethGroupId='+ comethGroupId
+console.log("apiString", apiString) 
   return (
     <>
       {/* <main className="main"> */}
@@ -37,8 +38,9 @@ const SismoConnectFunction: FC<SismoConnectFunctionProps> = ({ groupId, setsismo
             config={CONFIG}
             auths={AUTHS}
             claims={
+              // CLAIMS
               [
-                { groupId: groupId,//"0x9bfaf997efdde9a6372fe679f177a5c1" ,
+                { groupId: comethGroupId ,
                 claimType: ClaimType.EQ,
                 value: 1,},
               ]
@@ -49,7 +51,7 @@ const SismoConnectFunction: FC<SismoConnectFunctionProps> = ({ groupId, setsismo
               setSismoConnectResponse(response);
               setPageState("verifying");
               setsismoVerfied("verifying");
-              const verifiedResult = await fetch("/api/verify/route", {
+              const verifiedResult = await fetch(apiString, {
                 method: "POST",
                 body: JSON.stringify(response),
               });
