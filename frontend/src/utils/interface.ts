@@ -22,7 +22,7 @@ export interface ProposalInput {
   targetAddress: string;
   tokenAddressSource: string;
   sourceValue: number;
-  duration: number;
+  endDate: number;
   voteNeeded: number;
   nftAddress: string;
   groupId: string;
