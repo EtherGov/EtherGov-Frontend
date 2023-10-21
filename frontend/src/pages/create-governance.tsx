@@ -25,7 +25,6 @@ import axios from "axios";
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
-  const [minimumVotes, setMinimumVotes] = useState<number>(0);
   const [mailboxAddress, setMailboxAddress] = useState<string>("");
   const [gasPayMaster, setGasPayMaster] = useState<string>("");
   const [factoryAddress, setFactoryAddress] = useState<string>("");
@@ -43,14 +42,7 @@ export default function Home() {
     address: factoryAddress as `0x${string}`,
     abi: GovernanceFactory.abi,
     functionName: "createGovernance",
-    args: [
-      name,
-      minimumVotes,
-      mailboxAddress,
-      gasPayMaster,
-      erc20,
-      councilAddresses,
-    ],
+    args: [name, mailboxAddress, gasPayMaster, councilAddresses, erc20],
   });
 
   const { data, isLoading, isSuccess, write } = useContractWrite(config);
@@ -151,28 +143,15 @@ export default function Home() {
         {/* INPUT */}
         <div>
           <h1 className=" mt-5 text-4xl font-bold ">Create Governance</h1>
-          <hr className="my-4 border-t-4  border-gray-400 w-full"/>
+          <hr className="my-4 border-t-4  border-gray-400 w-full" />
           <br />
 
           <div>
             <h2>DAO Name</h2>
             <input
-            className="w-96 py-2 px-4 border-2 border-black bg-transparent focus:outline-none focus:border-gray-400 rounded-xl"
-
+              className="w-96 py-2 px-4 border-2 border-black bg-transparent focus:outline-none focus:border-gray-400 rounded-xl"
               onChange={(e) => {
                 setName(e.target.value);
-              }}
-            />
-          </div>
-          <br />
-
-          <div>
-            <h2>Minimum Vote</h2>
-            <input
-              className="w-96 py-2 px-4 border-2 border-black bg-transparent focus:outline-none focus:border-gray-400 rounded-xl"
-              type="number"
-              onChange={(e) => {
-                setMinimumVotes(Number(e.target.value));
               }}
             />
           </div>
@@ -201,7 +180,12 @@ export default function Home() {
                     value={address}
                     onChange={(event) => handleInputChange(index, event)}
                   />
-                  <Button className=" ml-5" onClick={() => removeCouncil(index)}>Remove</Button>
+                  <Button
+                    className=" ml-5"
+                    onClick={() => removeCouncil(index)}
+                  >
+                    Remove
+                  </Button>
                 </div>
               </div>
             ))}
