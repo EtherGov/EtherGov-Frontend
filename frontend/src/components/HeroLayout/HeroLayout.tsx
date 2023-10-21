@@ -60,7 +60,7 @@ const HeroLayout = () => {
           EtherGov
         </Text>
         <Text fontSize="2xl" className="font-semibold text-gray-500">
-          Create, Manage, and Govern Decentralized Autonomous Treasury (DAT)
+          Create, Manage, and Govern Decentralized Autonomous Organizations (DAOs)
           Accounts
         </Text>
       </div>
@@ -70,14 +70,14 @@ const HeroLayout = () => {
           onClick={handleCreateRoute}
         >
           <FaPlus className="mr-4" />
-          <span>Create New DATs</span>
+          <span>Create New DAOs</span>
         </button>
         <button
           className="w-full py-4 px-32 border-4 border-slate-200 bg-black text-xl text-white font-semibold rounded-lg shadow-md hover:opacity-70 flex items-center justify-center"
           onClick={handleBrowseRoute}
         >
           <FaSearch className="mr-4" />
-          <span>Browse DATs</span>
+          <span>Browse DAos</span>
         </button>
       </div>
 

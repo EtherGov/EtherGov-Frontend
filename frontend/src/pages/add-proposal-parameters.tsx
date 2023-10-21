@@ -5,9 +5,16 @@ import {
   Progress,
   Button,
   Input,
+  Box,
+  Radio,
+  RadioGroup,
 } from "@chakra-ui/react";
+import { useState } from "react";
 
 function AddProposalParameter() {
+  const [value, setValue] = useState("1");
+  const [customValue, setCustomValue] = useState("");
+
   return (
     <div className="h-full">
       <div className="mt-8 w-1/2 mx-auto">
@@ -31,7 +38,9 @@ function AddProposalParameter() {
               />
             </div>
             <div className="w-1/12 p-2 bg-transparent">
-              <Button bg="black" color="white">+</Button>
+              <Button bg="black" color="white">
+                +
+              </Button>
             </div>
           </div>
           <div className="flex flex-row w-full my-1">
@@ -46,7 +55,9 @@ function AddProposalParameter() {
               />
             </div>
             <div className="w-1/12 p-2 bg-transparent">
-              <Button bg="black" color="white">-</Button>
+              <Button bg="black" color="white">
+                -
+              </Button>
             </div>
           </div>
           <h1 className="text-xl font-semibold text-left justify-center mt-2">
@@ -64,7 +75,9 @@ function AddProposalParameter() {
               />
             </div>
             <div className="w-1/12 p-2 bg-transparent">
-              <Button bg="black" color="white">+</Button>
+              <Button bg="black" color="white">
+                +
+              </Button>
             </div>
           </div>
           <div className="flex flex-row w-full my-1">
@@ -79,7 +92,9 @@ function AddProposalParameter() {
               />
             </div>
             <div className="w-1/12 p-2 bg-transparent">
-              <Button bg="black" color="white">-</Button>
+              <Button bg="black" color="white">
+                -
+              </Button>
             </div>
           </div>
           <h1 className="text-xl font-semibold text-left justify-center mt-2">
@@ -99,7 +114,9 @@ function AddProposalParameter() {
               />
             </div>
             <div className="w-1/12 p-2 bg-transparent">
-              <Button bg="black" color="white">+</Button>
+              <Button bg="black" color="white">
+                +
+              </Button>
             </div>
           </div>
           <div className="flex flex-row w-full my-1">
@@ -114,9 +131,34 @@ function AddProposalParameter() {
               />
             </div>
             <div className="w-1/12 p-2 bg-transparent">
-              <Button bg="black" color="white">-</Button>
+              <Button bg="black" color="white">
+                -
+              </Button>
             </div>
           </div>
+          <h1 className="text-xl font-semibold text-left justify-center mt-2">
+            Gas Tank:
+          </h1>
+          <Box>
+            <RadioGroup onChange={setValue} value={value}>
+              <Box>
+                <Radio my={2} value="1" defaultChecked>
+                <Box ml={2}>EtherGov (Default)</Box>
+                </Radio>
+              </Box>
+              <Box display="flex" alignItems="center">
+                <Radio value="2" />
+                <Input
+                  placeholder="<Input Custom Address>"
+                  ml={2}
+                  borderColor="gray"
+                  value={customValue}
+                  onChange={(e) => setCustomValue(e.target.value)}
+                  disabled={value !== "2"}
+                />
+              </Box>
+            </RadioGroup>
+          </Box>
           <div className="flex flex-row w-1/2 mt-6 mx-auto">
             <h1 className="text-md w-1/2 font-semibold text-center justify-center mt-1">
               Min Voting Period:

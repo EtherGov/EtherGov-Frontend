@@ -62,13 +62,13 @@ const Navbar = () => {
           className="w-[140px] bg-green-main hover:bg-green-main text-white font-semibold py-2 px-4 rounded-full"
           onClick={handleCreateRoute}
         >
-          Create DATs
+          Create DAOs
         </button>
         <button
           className="w-[180px] bg-green-main hover:bg-green-main text-white font-semibold py-2 px-4 rounded-full"
           onClick={handleBrowseRoute}
         >
-          Browse DATs
+          Browse DAOs
         </button>
         <ConnectButton />
       </div>
