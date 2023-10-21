@@ -2,7 +2,18 @@ import { useRouter } from "next/router";
 import { useAccount, useContractRead } from "wagmi";
 import Governance from "../../../../public/Governance.json";
 import { useEffect, useState } from "react";
-import { Button, Select } from "@chakra-ui/react";
+import {
+  Button,
+  Card,
+  Select,
+  CardHeader,
+  Text,
+  Heading,
+  CardBody,
+  Stack,
+  StackDivider,
+  Box,
+} from "@chakra-ui/react";
 import axios from "axios";
 
 function GovernanceDetail() {
@@ -10,6 +21,11 @@ function GovernanceDetail() {
   const [council, setCouncil] = useState<string[]>([""]);
   const [chainId, setChainId] = useState<number>(0); // [
   const [walletAddress, setWalletAddress] = useState<string>("");
+  const [shouldRefetch, setShouldRefetch] = useState(true);
+
+  const [activeProposals, setActiveProposals] = useState<any[]>([]);
+  const [passedProposals, setPassedProposals] = useState<any[]>([]);
+  const [failedProposals, setFailedProposals] = useState<any[]>([]);
   const router = useRouter();
   const { address } = useAccount();
 
@@ -19,6 +35,12 @@ function GovernanceDetail() {
     functionName: "returnAllCouncil",
   });
 
+  const { data: data2 } = useContractRead({
+    address: governanceAddress as `0x${string}`,
+    abi: Governance.abi,
+    functionName: "returnAllProposal",
+  });
+
   useEffect(() => {
     const { contractAddress } = router.query;
     setGovernanceAddress(contractAddress as string);
@@ -26,10 +48,34 @@ function GovernanceDetail() {
   }, []);
 
   useEffect(() => {
-    if (data) {
+    if (data && data2) {
+      console.log(data2);
       setCouncil(data as string[]);
+      const allProposals = data2 as any[];
+      const now = Date.now();
+
+      const active = allProposals.filter((p) => Number(p.endDate));
+      console.log(Number(active[0].endDate) * 1000 > now);
+
+      setActiveProposals(
+        allProposals.filter(
+          (p) => !p.executed && !p.ended && Number(p.endDate) * 1000 > now
+        )
+      );
+
+      setPassedProposals(allProposals.filter((p) => p.executed));
+
+      setFailedProposals(
+        allProposals.filter(
+          (p) => !p.executed && Number(p.endDate) * 1000 < now
+        )
+      );
+
+      setShouldRefetch(false);
+    } else {
+      setTimeout(() => setShouldRefetch(true), 5000);
     }
-  }, [data]);
+  }, [data, data2, shouldRefetch]);
 
   const handleDeployAA = async () => {
     try {
@@ -96,12 +142,153 @@ function GovernanceDetail() {
       </div>
       <div>
         <h1>Active Proposals</h1>
+        <div>
+          {activeProposals ? (
+            activeProposals.map((item, key) => {
+              return (
+                <Card key={key}>
+                  <CardHeader>
+                    <Heading>{item.description}</Heading>
+                  </CardHeader>
+                  <CardBody>
+                    <Stack divider={<StackDivider />} spacing="4">
+                      <Box>
+                        <Heading size="xs" textTransform="uppercase">
+                          Proposer
+                        </Heading>
+                        <Text pt="2" fontSize="sm">
+                          {item.proposedAddress}
+                        </Text>
+                      </Box>
+                      <Box>
+                        <Heading size="xs" textTransform="uppercase">
+                          Proposed Transaction
+                        </Heading>
+                        <Text pt="2" fontSize="sm">
+                          Chain Id: {item.targetChain}
+                        </Text>
+                        <Text pt="2" fontSize="sm">
+                          Vault Address: {item.targetAddress}
+                        </Text>
+                        <Text pt="2" fontSize="sm">
+                          ERC20: {item.tokenAddressSource}
+                        </Text>
+                        <Text pt="2" fontSize="sm">
+                          Value: {Number(item.sourceValue)}
+                        </Text>
+                      </Box>
+                    </Stack>
+                  </CardBody>
+                </Card>
+              );
+            })
+          ) : (
+            <></>
+          )}
+        </div>
       </div>
       <div>
         <h1>Passed Proposals</h1>
-      </div>
-      <div>
-        <h1>Failed Proposals</h1>
+        <div>
+          {passedProposals ? (
+            passedProposals.map((item, key) => {
+              return (
+                <Card key={key}>
+                  <CardHeader>
+                    <Heading>{item.description}</Heading>
+                  </CardHeader>
+                  <CardBody>
+                    <Stack divider={<StackDivider />} spacing="4">
+                      <Box>
+                        <Heading size="xs" textTransform="uppercase">
+                          Proposer
+                        </Heading>
+                        <Text pt="2" fontSize="sm">
+                          {item.proposedAddress}
+                        </Text>
+                      </Box>
+                      <Box>
+                        <Heading size="xs" textTransform="uppercase">
+                          Proposed Transaction
+                        </Heading>
+                        <Text pt="2" fontSize="sm">
+                          Chain Id: {item.targetChain}
+                        </Text>
+                        <Text pt="2" fontSize="sm">
+                          Vault Address: {item.targetAddress}
+                        </Text>
+                        <Text pt="2" fontSize="sm">
+                          ERC20: {item.tokenAddressSource}
+                        </Text>
+                        <Text pt="2" fontSize="sm">
+                          Value: {Number(item.sourceValue)}
+                        </Text>
+                      </Box>
+                    </Stack>
+                  </CardBody>
+                </Card>
+              );
+            })
+          ) : (
+            <></>
+          )}
+        </div>
+        <div>
+          <h1>Failed Proposals</h1>
+          <div>
+            {failedProposals ? (
+              failedProposals.map((item, key) => {
+                return (
+                  <Card key={key}>
+                    <CardHeader>
+                      <Heading>{item.description}</Heading>
+                    </CardHeader>
+                    <CardBody>
+                      <Stack divider={<StackDivider />} spacing="4">
+                        <Box>
+                          <Heading size="xs" textTransform="uppercase">
+                            Proposer
+                          </Heading>
+                          <Text pt="2" fontSize="sm">
+                            {item.proposedAddress}
+                          </Text>
+                        </Box>
+                        <Box>
+                          <Heading size="xs" textTransform="uppercase">
+                            Proposed Transaction
+                          </Heading>
+                          <Text pt="2" fontSize="sm">
+                            Chain Id: {item.targetChain}
+                          </Text>
+                          <Text pt="2" fontSize="sm">
+                            Vault Address: {item.targetAddress}
+                          </Text>
+                          <Text pt="2" fontSize="sm">
+                            ERC20: {item.tokenAddressSource}
+                          </Text>
+                          <Text pt="2" fontSize="sm">
+                            Value: {Number(item.sourceValue)}
+                          </Text>
+                          <Text pt="2" fontSize="sm">
+                            Value:{" "}
+                            {new Date(
+                              Number(item.endDate) * 1000
+                            ).toDateString()}{" "}
+                            {new Date(
+                              Number(item.endDate) * 1000
+                            ).toLocaleTimeString()}
+                          </Text>
+                        </Box>
+                      </Stack>
+                    </CardBody>
+                  </Card>
+                );
+              })
+            ) : (
+              <></>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );
