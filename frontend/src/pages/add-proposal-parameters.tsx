@@ -159,7 +159,26 @@ function AddProposalParameter() {
               </Box>
             </RadioGroup>
           </Box>
-          <div className="flex flex-row w-1/2 mt-6 mx-auto">
+          <div className="flex flex-row w-1/2 mt-8 mx-auto">
+            <h1 className="text-md w-1/2 font-semibold text-center justify-center mt-1">
+              Min Staking Period:
+            </h1>
+            <h1 className="text-md w-1/4 font-semibold text-center justify-center">
+              <Input
+                className="text-md font-medium text-right"
+                width="100%"
+                variant="outline"
+                borderColor="gray"
+                placeholder="..."
+                value="15"
+                size="sm"
+              />
+            </h1>
+            <h1 className="text-md w-1/4 font-semibold text-center justify-center mt-1">
+              Days
+            </h1>
+          </div>
+          <div className="flex flex-row w-1/2 mt-3 mx-auto">
             <h1 className="text-md w-1/2 font-semibold text-center justify-center mt-1">
               Min Voting Period:
             </h1>
@@ -201,7 +220,7 @@ function AddProposalParameter() {
             bg="black"
             color="white"
             _hover={{ opacity: 0.7 }}
-            className="w-1/2 mx-auto my-6 items-center text-center justify-center"
+            className="w-1/2 mx-auto mt-8 mb-4 items-center text-center justify-center"
           >
             Propose Changes
           </Button>
