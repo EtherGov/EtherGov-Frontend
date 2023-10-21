@@ -15,60 +15,57 @@ export function useWalletAuth() {
     setWallet,
     setProvider,
     wallet,
-    PayoutContract,
-    setPayoutContract,
+    // PayoutContract,
+    // setPayoutContract,
+    // walletAddress,
   } = useWalletContext();
 
   const [isConnecting, setIsConnecting] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
 
   const [connectionError, setConnectionError] = useState<string | null>(null);
-
+  const[walletAddress, setWalletAddress] = useState<string | null>(null);
   const apiKey = env.comethKey
 
-  const PAYOUT_CONTRACT_ADDRESS = "0x3a4F982b855589C9cc9c8d31dc69cc785412f285";
+  // const PAYOUT_CONTRACT_ADDRESS = "0x3a4F982b855589C9cc9c8d31dc69cc785412f285";
 
   function displayError(message: string) {
     setConnectionError(message);
   }
 
   async function connect() {
-    if (!apiKey) throw new Error("no apiKey provided");
+    if (!apiKey) {
+        displayError("No apiKey provided");
+        return;
+    }
+    
     setIsConnecting(true);
+
     try {
-
         const localStorageAddress = window.localStorage.getItem("walletAddress");
-
         if (localStorageAddress) {
             await comethWallet.connect(localStorageAddress);
-            
         } else {
             await comethWallet.connect();
-            const walletAddress = await comethWallet.getAddress();
-            window.localStorage.setItem("walletAddress", walletAddress);
-            
+            const address = comethWallet.getAddress();
+            window.localStorage.setItem("walletAddress", address);
         }
 
-        const instanceProvider = new ComethProvider(comethWallet!);
+        const currentWalletAddress = comethWallet.getAddress();
+        setWalletAddress(currentWalletAddress);
+        
+        setWallet(comethWallet);
+        const instanceProvider = new ComethProvider(comethWallet);
+        setProvider(instanceProvider);
 
-        // const contract = new ethers.Contract(
-        //     PAYOUT_CONTRACT_ADDRESS,
-        //     payoutABI,
-        //     instanceProvider.getSigner()
-        // );
-
-        // setPayoutContract(contract);
-        setPayoutContract(null);
         setIsConnected(true);
-        setWallet(comethWallet as any);
-        setProvider(instanceProvider as any);
-
     } catch (e) {
-      displayError((e as Error).message);
+        displayError((e as Error).message);
     } finally {
-      setIsConnecting(false);
+        setIsConnecting(false);
     }
-  }
+}
+
 
   async function disconnect() {
     if (wallet) {
@@ -77,7 +74,7 @@ export function useWalletAuth() {
         setIsConnected(false);
         setWallet(null);
         setProvider(null);
-        setPayoutContract(null);
+        // setPayoutContract(null);
       } catch (e) {
         displayError((e as Error).message);
       }
@@ -85,7 +82,8 @@ export function useWalletAuth() {
   }
   return {
     wallet,
-    PayoutContract,
+    // PayoutContract,
+    walletAddress,
     connect,
     disconnect,
     isConnected,

@@ -4,5 +4,5 @@ export const env = {
   infuraKey: process.env.NEXT_PUBLIC_INFURA_KEY || "",
   alchemyKey: process.env.NEXT_PUBLIC_ALCHEMY_KEY || "",
   comethKey: process.env.NEXT_PUBLIC_COMETH_KEY || "",
-
+  comethSecret: process.env.NEXT_PUBLIC_COMETH_SECRET || "",
 };
