@@ -11,61 +11,62 @@ import {
   SIGNATURE_REQUEST,
   AuthType,
   ClaimType,
-} from "../../shared/sismo"
+} from "../../shared/sismo";
 
 interface SismoConnectFunctionProps {
   setsismoVerfied: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const SismoConnectFunction: FC<SismoConnectFunctionProps> = ({ setsismoVerfied }) => {
+const SismoConnectFunction: FC<SismoConnectFunctionProps> = ({
+  setsismoVerfied,
+}) => {
   const [sismoConnectVerifiedResult, setSismoConnectVerifiedResult] =
     useState<SismoConnectVerifiedResult>();
-  const [sismoConnectResponse, setSismoConnectResponse] = useState<SismoConnectResponse>();
+  const [sismoConnectResponse, setSismoConnectResponse] =
+    useState<SismoConnectResponse>();
   const [pageState, setPageState] = useState<string>("init");
   const [error, setError] = useState<string>("");
 
   return (
     <>
       {/* <main className="main"> */}
-        {/* <Header /> */}
-        {pageState == "init" ? (
-          <>
-            <SismoConnectButton
-              config={CONFIG}
-              auths={AUTHS}
-              claims={CLAIMS}
-              signature={SIGNATURE_REQUEST}
-              text="Prove With Sismo"
+      {/* <Header /> */}
+      {pageState == "init" ? (
+        <>
+          <SismoConnectButton
+            config={CONFIG}
+            auths={AUTHS}
+            claims={CLAIMS}
+            signature={SIGNATURE_REQUEST}
+            text="Prove With Sismo"
+            onResponse={async (response: SismoConnectResponse) => {
+              setSismoConnectResponse(response);
+              setPageState("verifying");
+              setsismoVerfied("verifying");
+              const verifiedResult = await fetch("/api/verify/route", {
+                method: "POST",
+                body: JSON.stringify(response),
+              });
+              console.log(response);
 
-              onResponse={async (response: SismoConnectResponse) => {
-                setSismoConnectResponse(response);
-                setPageState("verifying");
-                setsismoVerfied("verifying")
-                const verifiedResult = await fetch("/api/verify/route", {
-                  method: "POST",
-                  body: JSON.stringify(response),
-                });
-                console.log(response);
+              const data = await verifiedResult.json();
+              console.log(data);
 
-                const data = await verifiedResult.json();
-                console.log(data);
-
-                if (verifiedResult.ok) {
-                  setSismoConnectVerifiedResult(data);
-                  setPageState("verified");
-                  setsismoVerfied("verified")
-                } else {
-                  setPageState("error");
-                  setsismoVerfied("error")
-                  setError(data);
-                }
-              }}
-            />
-          </>
-        ) : (
-          <>
-
-            {/* <button
+              if (verifiedResult.ok) {
+                setSismoConnectVerifiedResult(data);
+                setPageState("verified");
+                setsismoVerfied("verified");
+              } else {
+                setPageState("error");
+                setsismoVerfied("error");
+                setError(data);
+              }
+            }}
+          />
+        </>
+      ) : (
+        <>
+          {/* <button
               onClick={() => {
                 window.location.href = "/";
               }}
@@ -74,25 +75,36 @@ const SismoConnectFunction: FC<SismoConnectFunctionProps> = ({ setsismoVerfied }
               RESET{" "}
             </button> */}
 
-            <br></br>
-            <div className="status-wrapper">
-              {pageState == "verifying" ? (
-                <h1 className="verifying"> Verifying ZK Proofs... </h1>
-              ) : (
-                <>
-                  {Boolean(error) ? (
-                    <h1 className="error"> Error verifying ZK Proofs: {JSON.stringify(error)} </h1>
-                  ) : (
-                    <h1 className="verified"> ZK Proofs verified!</h1>
-                  )}
-                </>
-              )}
-            </div>
-          </>
-        )}
+          <div className="status-wrapper">
+            {pageState == "verifying" ? (
+              <div className="flex justify-center">
+                <h1 className="verifying text-center p-5 border-2 rounded-xl bg-amber-400 text-2xl w-[300px] text-[#fff]">
+                  Verifying ZK Proofs...
+                </h1>
+              </div>
+            ) : (
+              <>
+                {Boolean(error) ? (
+                  <div className=" flex justify-center">
+                    <h1 className="error text-center p-5 border-2 rounded-xl bg-red-800 text-2xl w-[300px] text-[#fff]">
+                      Error verifying ZK Proofs: {JSON.stringify(error)}{" "}
+                    </h1>
+                  </div>
+                ) : (
+                  <div className=" flex justify-center">
+                    <h1 className="verified text-center p-5 border-2 rounded-xl bg-indigo-800 text-2xl w-[300px] text-[#fff]">
+                      ZK Proofs verified!
+                    </h1>
+                  </div>
+                )}
+              </>
+            )}
+          </div>
+        </>
+      )}
     </>
   );
-}
+};
 
 // function tableData(){
 //   <>
@@ -256,11 +268,20 @@ const SismoConnectFunction: FC<SismoConnectFunctionProps> = ({ setsismoVerfied }
 //       </>
 // }
 
-function readibleHex(userId: string, startLength = 6, endLength = 4, separator = "...") {
+function readibleHex(
+  userId: string,
+  startLength = 6,
+  endLength = 4,
+  separator = "..."
+) {
   if (!userId.startsWith("0x")) {
     return userId; // Return the original string if it doesn't start with "0x"
   }
-  return userId.substring(0, startLength) + separator + userId.substring(userId.length - endLength);
+  return (
+    userId.substring(0, startLength) +
+    separator +
+    userId.substring(userId.length - endLength)
+  );
 }
 
 function getProofDataForAuth(
@@ -289,7 +310,11 @@ function getProofDataForClaim(
   for (const proof of sismoConnectResponse.proofs) {
     if (proof.claims) {
       for (const claim of proof.claims) {
-        if (claim.claimType === claimType && claim.groupId === groupId && claim.value === value) {
+        if (
+          claim.claimType === claimType &&
+          claim.groupId === groupId &&
+          claim.value === value
+        ) {
           return proof.proofData;
         }
       }
