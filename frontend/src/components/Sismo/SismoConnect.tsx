@@ -14,12 +14,12 @@ import {
 } from "../../shared/sismo";
 
 interface SismoConnectFunctionProps {
+  groupId: string; // New parameter
+
   setsismoVerfied: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const SismoConnectFunction: FC<SismoConnectFunctionProps> = ({
-  setsismoVerfied,
-}) => {
+const SismoConnectFunction: FC<SismoConnectFunctionProps> = ({ groupId, setsismoVerfied }) => {
   const [sismoConnectVerifiedResult, setSismoConnectVerifiedResult] =
     useState<SismoConnectVerifiedResult>();
   const [sismoConnectResponse, setSismoConnectResponse] =
@@ -36,7 +36,13 @@ const SismoConnectFunction: FC<SismoConnectFunctionProps> = ({
           <SismoConnectButton
             config={CONFIG}
             auths={AUTHS}
-            claims={CLAIMS}
+            claims={
+              [
+                { groupId: groupId,//"0x9bfaf997efdde9a6372fe679f177a5c1" ,
+                claimType: ClaimType.EQ,
+                value: 1,},
+              ]
+            }
             signature={SIGNATURE_REQUEST}
             text="Prove With Sismo"
             onResponse={async (response: SismoConnectResponse) => {

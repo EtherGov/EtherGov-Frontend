@@ -99,14 +99,14 @@ const ProposalZoom: FC = () => {
             wallet={wallet}
             walletAddress={walletAddress}
             // setComethLoggedIn={setComethLoggedIn}
-          />
+            />
 
-          <br />
-
-          {/* <ComethApprove/> */}
           {/* <ComethGaslessTransaction/> */}
 
-          <SismoConnectFunction setsismoVerfied={setsismoVerfied} />
+          <SismoConnectFunction 
+            groupId="0x9bfaf997efdde9a6372fe679f177a5c1"
+            setsismoVerfied={setsismoVerfied}
+          />
 
           {sismoVerfied == "verified" ? (
             isConnected == true ? (

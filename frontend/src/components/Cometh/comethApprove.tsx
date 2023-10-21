@@ -3,6 +3,10 @@ import { comethWallet } from '@/shared/cometh';
 import { ethers } from 'ethers';
 // import registryabi from "../../../registryabi.json";
 
+        //     uint256 proposalId,
+        //     uint256 stakeAmount,
+        //     uint256 tokenId
+        
 export async function ComethApproveFunction() {
     const provider = new ComethProvider(comethWallet)
 
@@ -16,7 +20,12 @@ export async function ComethApproveFunction() {
     console.log("call contract")
     try {
         console.log("step 1")
-        const tx = await nftContract.updateOwner(1, "0x1A10A9331F011D44eF360A3D416Ea8763e95F2C8");
+        // function stakeAndVote(
+        //     uint256 proposalId,
+        //     uint256 stakeAmount,
+        //     uint256 tokenId
+        // )
+        const tx = await nftContract.stakeAndVote(1, "0x1A10A9331F011D44eF360A3D416Ea8763e95F2C8");
         console.log("tx", tx)
         const txResponse = await tx.wait();
         console.log("txResponse", txResponse);
