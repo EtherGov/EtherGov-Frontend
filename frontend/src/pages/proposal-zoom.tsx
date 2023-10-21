@@ -1,8 +1,15 @@
 import { Button, Card, Divider, Textarea } from "@chakra-ui/react";
-import { useState } from "react";
+import { useState,FC } from "react";
 import { Progress } from "@chakra-ui/react";
+import ConnectComethWallet from "@/components/Cometh/comethConnectWallet";
+import SismoConnectFunction from "@/components/Sismo/SismoConnect";
+import { useWalletAuth } from "@/components/Cometh/comethWalletAuth";
 
-function ProposalZoom() {
+
+// function ProposalZoom() 
+const ProposalZoom: FC = () => {
+  const { isConnecting:isComethConnecting, isConnected, connect, connectionError, wallet } = useWalletAuth();
+
   const [proposalTitle, setProposalTitle] = useState(
     "Deposit 100k DAI for sDAI (Scroll)"
   );
@@ -13,6 +20,9 @@ function ProposalZoom() {
   const [dateEnacted, setDateEnacted] = useState("20/10/2023");
 
   const [dayPeriod, setDayPeriod] = useState("3 Days");
+
+  const [sismoVerfied, setsismoVerfied] = useState<string>("init")
+
 
   return (
     <div className="h-full">
@@ -66,14 +76,28 @@ function ProposalZoom() {
           <h1 className="text-xl font-semibold text-center justify-center mt-8">
             Weight: 100 $APE
           </h1>
-          <Button
+          <br></br>
+          <SismoConnectFunction setsismoVerfied={setsismoVerfied}/>
+
+          
+          {/* enable cometh wallet when sismoVerfied state is "verified" */}
+          <ConnectComethWallet
+            isConnected={isConnected}
+            isConnecting={isComethConnecting}
+            connect={connect}
+            connectionError={connectionError}
+            wallet={wallet!}
+          />
+
+          {/* <Button
             bg="black"
             color="white"
             _hover={{ opacity: 0.7 }}
             className="w-1/2 mx-auto my-8 items-center text-center justify-center"
           >
             Approve Proposal
-          </Button>
+          </Button> */}
+
         </Card>
       </div>
     </div>
