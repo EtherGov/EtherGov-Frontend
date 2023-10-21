@@ -12,7 +12,6 @@ import { envConfigMappings } from "@/utils/config";
 import axios from "axios";
 
 export default function InitDat() {
-  const [minimumVotes, setMinimumVotes] = useState<number>(0);
   const [mailboxAddress, setMailboxAddress] = useState<string>("");
   const [gasPayMaster, setGasPayMaster] = useState<string>("");
   const [factoryAddress, setFactoryAddress] = useState<string>("");
@@ -30,14 +29,7 @@ export default function InitDat() {
     address: factoryAddress as `0x${string}`,
     abi: GovernanceFactory.abi,
     functionName: "createGovernance",
-    args: [
-      name,
-      minimumVotes,
-      mailboxAddress,
-      gasPayMaster,
-      erc20,
-      councilAddresses,
-    ],
+    args: [name, mailboxAddress, gasPayMaster, erc20, councilAddresses],
   });
 
   const { data, isLoading, isSuccess, write } = useContractWrite(config);
@@ -143,23 +135,11 @@ export default function InitDat() {
             <br />
 
             <div className="flex items-center gap-4">
-                <h2 className=" text-xl font-medium">DAO Name</h2>
-                <input
-                  className="w-[585px] py-2 px-4 border-2 border-black bg-transparent focus:outline-none focus:border-gray-400 rounded-xl"
-                  onChange={(e) => {
-                    setName(e.target.value);
-                  }}
-                />
-            </div>
-            <br />
-
-            <div>
-              <h2 className=" text-xl font-medium">Minimum Vote</h2>
+              <h2 className=" text-xl font-medium">DAO Name</h2>
               <input
-                className="w-[700px] py-2 px-4 border-2 border-black bg-transparent focus:outline-none focus:border-gray-400 rounded-xl"
-                type="number"
+                className="w-[585px] py-2 px-4 border-2 border-black bg-transparent focus:outline-none focus:border-gray-400 rounded-xl"
                 onChange={(e) => {
-                  setMinimumVotes(Number(e.target.value));
+                  setName(e.target.value);
                 }}
               />
             </div>
@@ -179,7 +159,9 @@ export default function InitDat() {
               {councilAddresses.map((address, index) => (
                 <div key={index}>
                   <br />
-                  <h2 className=" text-xl font-medium">{index + 1}. Council Address</h2>
+                  <h2 className=" text-xl font-medium">
+                    {index + 1}. Council Address
+                  </h2>
                   <div className="flex">
                     <input
                       className="w-[590px] py-2 px-4 border-2 border-black bg-transparent focus:outline-none focus:border-gray-400 rounded-xl"

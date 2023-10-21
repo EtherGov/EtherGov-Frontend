@@ -9,8 +9,8 @@ interface ConnectWalletProps {
   isConnecting: boolean;
   isConnected: boolean;
   connect: () => Promise<void>;
-  wallet: ComethWallet|null;
-  walletAddress: string|null;
+  wallet: ComethWallet | null;
+  walletAddress: string | null;
 }
 
 function ConnectComethWallet({
@@ -19,29 +19,27 @@ function ConnectComethWallet({
   isConnected,
   connect,
   wallet,
-  walletAddress
+  walletAddress,
 }: ConnectWalletProps): JSX.Element {
   useEffect(() => {
     console.log("Wallet changed: ", wallet);
- }, [wallet]);
- 
+  }, [wallet]);
+
   const getTextButton = () => {
-    console.log("cometh wallet", wallet)
+    console.log("cometh wallet", wallet);
     // console.log("cometh walletAddress", walletAddress)
     if (isConnected) {
       return (
         // setComethLoggedIn(true),
         <>
-          <Box width={20} height={20} />
-          <a
-            // href={`https://mumbai.polygonscan.com/address/${wallet.getAddress()}`}
-            // target="_blank"
+          <h1 className="border-2 p-5 rounded-xl"
+          // href={`https://mumbai.polygonscan.com/address/${wallet.getAddress()}`}
+          // target="_blank"
           >
-              Cometh Wallet Connected:
-              <br />
-              {walletAddress}
-              
-          </a>
+            <span className=" text-[#1F4172]">COMETH </span>Wallet Connected:
+            <br />
+            {walletAddress}
+          </h1>
         </>
       );
     } else if (isConnecting) {
