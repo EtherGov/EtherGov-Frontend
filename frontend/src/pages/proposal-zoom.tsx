@@ -4,11 +4,13 @@ import { Progress } from "@chakra-ui/react";
 import ConnectComethWallet from "@/components/Cometh/comethConnectWallet";
 import SismoConnectFunction from "@/components/Sismo/SismoConnect";
 import { useWalletAuth } from "@/components/Cometh/comethWalletAuth";
+import ComethGaslessTransaction from "@/components/Cometh/comethGaslessFunction";
+import { ComethApprove, ComethApproveFunction } from "@/components/Cometh/comethApprove";
 
+//Sismo Group ID
 
-// function ProposalZoom() 
 const ProposalZoom: FC = () => {
-  const { isConnecting:isComethConnecting, isConnected, connect, connectionError, wallet } = useWalletAuth();
+  const { isConnecting:isComethConnecting, isConnected, connect, connectionError, wallet, walletAddress } = useWalletAuth();
 
   const [proposalTitle, setProposalTitle] = useState(
     "Deposit 100k DAI for sDAI (Scroll)"
@@ -22,6 +24,8 @@ const ProposalZoom: FC = () => {
   const [dayPeriod, setDayPeriod] = useState("3 Days");
 
   const [sismoVerfied, setsismoVerfied] = useState<string>("init")
+
+  const [comethLoggedIn, setComethLoggedIn] = useState(false)
 
 
   return (
@@ -77,26 +81,47 @@ const ProposalZoom: FC = () => {
             Weight: 100 $APE
           </h1>
           <br></br>
-          <SismoConnectFunction setsismoVerfied={setsismoVerfied}/>
-
-          
-          {/* enable cometh wallet when sismoVerfied state is "verified" */}
           <ConnectComethWallet
             isConnected={isConnected}
             isConnecting={isComethConnecting}
             connect={connect}
             connectionError={connectionError}
-            wallet={wallet!}
-          />
+            wallet={wallet}
+            walletAddress={walletAddress}
+            // setComethLoggedIn={setComethLoggedIn}
+            />
+          {/* <ComethApprove/> */}
+          <ComethGaslessTransaction/>
 
-          {/* <Button
-            bg="black"
-            color="white"
-            _hover={{ opacity: 0.7 }}
-            className="w-1/2 mx-auto my-8 items-center text-center justify-center"
-          >
-            Approve Proposal
-          </Button> */}
+          <SismoConnectFunction setsismoVerfied={setsismoVerfied}/>
+
+          {sismoVerfied=="verified"?(isConnected==true?(
+              <Button
+                bg="black"
+                color="white"
+                _hover={{ opacity: 0.7 }}
+                className="w-1/2 mx-auto my-8 items-center text-center justify-center"
+                onClick={() => ComethApproveFunction()}
+               >
+                Approve Proposal with Cometh
+              </Button>
+            ):(
+                <Button
+                bg="black"
+                color="white"
+                _hover={{ opacity: 0.7 }}
+                className="w-1/2 mx-auto my-8 items-center text-center justify-center"
+              >
+                Approve Proposal with MetaMask
+              </Button>
+            ))
+            :(
+            <></>
+          )}
+          {/* enable cometh wallet when sismoVerfied state is "verified" */}
+      
+
+
 
         </Card>
       </div>

@@ -2,13 +2,15 @@ import { ComethWallet } from "@cometh/connect-sdk";
 // import { CheckIcon } from "@radix-ui/react-icons";
 // import { Icons } from "./../lib/ui/components";
 import { Box, Spinner } from "@chakra-ui/react";
+import { useEffect } from "react";
 
 interface ConnectWalletProps {
   connectionError: string | null;
   isConnecting: boolean;
   isConnected: boolean;
   connect: () => Promise<void>;
-  wallet: ComethWallet;
+  wallet: ComethWallet|null;
+  walletAddress: string|null;
 }
 
 function ConnectComethWallet({
@@ -17,17 +19,28 @@ function ConnectComethWallet({
   isConnected,
   connect,
   wallet,
+  walletAddress
 }: ConnectWalletProps): JSX.Element {
+  useEffect(() => {
+    console.log("Wallet changed: ", wallet);
+ }, [wallet]);
+ 
   const getTextButton = () => {
+    console.log("cometh wallet", wallet)
+    // console.log("cometh walletAddress", walletAddress)
     if (isConnected) {
       return (
+        // setComethLoggedIn(true),
         <>
           <Box width={20} height={20} />
           <a
             // href={`https://mumbai.polygonscan.com/address/${wallet.getAddress()}`}
             // target="_blank"
           >
-            {"Wallet connected"}
+              Cometh Wallet Connected:
+              <br />
+              {walletAddress}
+              
           </a>
         </>
       );
@@ -39,7 +52,7 @@ function ConnectComethWallet({
         </>
       );
     } else {
-      return "Approve";
+      return "Connect Cometh Wallet";
     }
   };
 
