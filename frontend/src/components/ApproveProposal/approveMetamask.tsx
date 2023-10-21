@@ -2,6 +2,10 @@
 // Github: https://github.com/alchemyplatform/alchemy-sdk-js
 import { env } from "@/shared/environment";
 import { Network, Alchemy } from "alchemy-sdk";
+import Governance from "../../../public/Governance.json"
+import { Button } from "@chakra-ui/react";
+import { useContractWrite } from "wagmi";
+
 
 // Optional Config object, but defaults to demo api-key and eth-mainnet.
 const settings = {
@@ -12,17 +16,54 @@ const settings = {
 
 const alchemy = new Alchemy(settings);
 
-// Print all NFTs returned in the response:
-export default async function getAllNFts() {
-    // alchemy.nft.getNftsForOwner("0x547F61FC3B2AC2B21518d660dE20398776d7C755").catch();
-    const nftsForOwner = await alchemy.nft.getNftsForOwner("0x547F61FC3B2AC2B21518d660dE20398776d7C755");
+export async function getAllNFts(walletAddress: any, nftAddress: any): Promise<number> {
+    try {
+        console.log("nftAddress",nftAddress);
 
-    console.log(nftsForOwner.ownedNfts)
+        const nftsForOwner = await alchemy.nft.getNftsForOwner(walletAddress);
 
-    nftsForOwner.ownedNfts.forEach(item => {
-        // console.log(item.contract.address);
-        if (item.contract.address == "0xC9Fd509E7969DE8Dbc1b5BfBdFc1418d90C27a3b".toLowerCase()) {
-            console.log("Found:", item);
+        console.log(nftsForOwner.ownedNfts);
+
+        for (const item of nftsForOwner.ownedNfts) {
+            // console.log("Found:", item);
+
+            if (item.contract.address.toLowerCase() === nftAddress.toLowerCase()) {
+                console.log("Token ID:", item.tokenId);
+                return parseInt(item.tokenId);
+            }
         }
-    });
+        
+        return 0;
+
+    } catch (error) {
+        console.error("Wallet Address does not own any NFT of that collection");
+        throw error; // or handle it accordingly based on your application's needs
+    }
 }
+
+interface ApproveMetamaskProps {
+    proposalId: string | number; // Adjust type as needed
+    tokenId: string | number; // Adjust type as needed
+    deployedContractAddress: string; // Assuming it's a string representation of an address
+}
+
+const ApproveMetamask: React.FC<ApproveMetamaskProps> = ({ proposalId, tokenId, deployedContractAddress }) => {
+    const { data, isLoading, isSuccess, write } = useContractWrite({
+        address: '0x38ec35d7E260A819E74E1938187470D931284744',
+        abi: Governance.abi,
+        functionName: 'stakeAndVote',
+    })
+     
+    return (
+        <Button
+            bg="black"
+            color="white"
+            _hover={{ opacity: 0.7 }}
+            className="w-1/2 mx-auto my-8 items-center text-center justify-center"
+            onClick={() => write({args: [proposalId,tokenId],})}
+        >
+            Approve Proposal with MetaMask
+        </Button>
+    )
+}
+export default ApproveMetamask;

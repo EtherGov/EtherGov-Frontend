@@ -55,7 +55,7 @@ export function useWalletContext() {
     // PayoutContract,
     // setPayoutContract,
   } = useContext(WalletContext);
-  console.log("walletContext", provider)
+  // console.log("walletContext", provider)
   return {
     wallet,
     setWallet,

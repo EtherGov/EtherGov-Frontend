@@ -7,13 +7,13 @@ import Governance from "../../../public/Governance.json"
         //     uint256 proposalId,
         //     uint256 tokenId
         
-export async function ComethApproveFunction(proposalId: any, tokenId: any) {
+export async function ComethApproveFunction(proposalId: any, tokenId: any, deployedContractAddress: any) {
     const provider = new ComethProvider(comethWallet)
 
     console.log("provider", provider.getSigner())
 
     const nftContract = new ethers.Contract(
-        "0x5c0Bb444AB6E56408B4d70C78d4d708244ADe9BA",//deployed address
+        "0x5c0Bb444AB6E56408B4d70C78d4d708244ADe9BA",//deployedContractAddress
         Governance.abi,//registry
         provider.getSigner()
     )
@@ -34,10 +34,10 @@ export async function ComethApproveFunction(proposalId: any, tokenId: any) {
     }
 }
 
-export function ComethApprove() {
-    return(
-        <div>
-            <button onClick={ComethApproveFunction}>Register DNS</button>
-        </div>
-    )
-}
+// export function ComethApprove() {
+//     return(
+//         <div>
+//             <button onClick={ComethApproveFunction}>Register DNS</button>
+//         </div>
+//     )
+// }

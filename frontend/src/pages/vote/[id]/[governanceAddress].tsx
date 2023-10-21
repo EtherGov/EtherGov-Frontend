@@ -6,12 +6,12 @@ import SismoConnectFunction from "@/components/Sismo/SismoConnect";
 import { useWalletAuth } from "@/components/Cometh/comethWalletAuth";
 import ComethGaslessTransaction from "@/components/Cometh/comethGaslessFunction";
 import {
-  ComethApprove,
   ComethApproveFunction,
 } from "@/components/Cometh/comethApprove";
-import { useContractRead } from "wagmi";
+import { useAccount, useContractRead } from "wagmi";
 import { useRouter } from "next/router";
 import Governance from "../../../../public/Governance.json";
+import ApproveMetamask, { getAllNFts } from "@/components/ApproveProposal/approveMetamask";
 
 interface Proposal {
   description: string;
@@ -52,13 +52,35 @@ const ProposalZoom: FC = () => {
     "BAYC's DAT is capitalized with an initial 100k DAI. In this case, depositing this 100k for sDAI in order to earn 5% yield is a risk-free action."
   );
 
+  const { address, isConnecting, isDisconnected } = useAccount()
+
   const [dateEnacted, setDateEnacted] = useState("20/10/2023");
 
   const [dayPeriod, setDayPeriod] = useState("3 Days");
 
   const [sismoVerfied, setsismoVerfied] = useState<string>("init");
 
-  const [comethLoggedIn, setComethLoggedIn] = useState(false);
+  const [loggedInAddress, setLoggedInAddress] = useState<string | null>(null);
+
+  const [tokenId, setTokenId] = useState<number>(0);
+
+  useEffect(() => {
+    setLoggedInAddress(address || null);
+
+  }, [address]);
+
+  useEffect(() => {
+    console.log("login add", loggedInAddress);
+  }, [loggedInAddress]);
+
+  useEffect(() => {
+    async function fetchTokenId() {
+        const id = await getAllNFts(loggedInAddress, String(selectedProposal.nftAddress));
+        setTokenId(id);
+    }
+
+    fetchTokenId();
+}, []);
 
   const [newId, setNewId] = useState("");
   const [newGovernanceAddress, setNewGovernanceAddress] = useState("");
@@ -100,6 +122,12 @@ const ProposalZoom: FC = () => {
       }
     }
   }, [data1, newId]); //
+
+  useEffect(() =>{
+    console.log("id", Number( selectedProposal.id))
+    console.log("nft address", String(selectedProposal.nftAddress))
+
+  })
 
 
 
@@ -183,16 +211,18 @@ const ProposalZoom: FC = () => {
             connectionError={connectionError}
             wallet={wallet}
             walletAddress={walletAddress}
-            // setComethLoggedIn={setComethLoggedIn}
-          />
+            setLoggedInAddress={setLoggedInAddress}
+            />
 
           <br />
 
           {/* <ComethApprove/> */}
           {/* <ComethGaslessTransaction/> */}
 
-          <SismoConnectFunction setsismoVerfied={setsismoVerfied} />
-
+          <SismoConnectFunction 
+            comethGroupId="0xc505a8125fc571896eecdadb908e7706"
+            setsismoVerfied={setsismoVerfied}
+          />
           {sismoVerfied == "verified" ? (
             isConnected == true ? (
               <Button
@@ -200,19 +230,16 @@ const ProposalZoom: FC = () => {
                 color="white"
                 _hover={{ opacity: 0.7 }}
                 className="w-1/2 mx-auto my-8 items-center text-center justify-center"
-                onClick={() => ComethApproveFunction()}
+                onClick={() => ComethApproveFunction(Number(selectedProposal.id) ,tokenId, selectedProposal.nftAddress)}
               >
                 Approve Proposal with Cometh
               </Button>
             ) : (
-              <Button
-                bg="black"
-                color="white"
-                _hover={{ opacity: 0.7 }}
-                className="w-1/2 mx-auto my-8 items-center text-center justify-center"
-              >
-                Approve Proposal with MetaMask
-              </Button>
+              <ApproveMetamask 
+                  proposalId={Number(selectedProposal.id)}  
+                  tokenId={tokenId}
+                  deployedContractAddress={selectedProposal.nftAddress}
+              />
             )
           ) : (
             <></>
