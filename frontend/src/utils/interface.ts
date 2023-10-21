@@ -15,3 +15,16 @@ export interface SafeWallet {
   hub_contract_address: string;
   hub_guardian: string;
 }
+
+export interface ProposalInput {
+  description: string;
+  targetChain: number;
+  targetAddress: string;
+  tokenAddressSource: string;
+  sourceValue: number;
+  duration: number;
+  voteNeeded: number;
+  nftAddress: string;
+  groupId: string;
+  messageBody: string;
+}

@@ -22,9 +22,25 @@ function ExecuteTransactionPage() {
   });
 
   const encodePayload = () => {
-    const value = [80];
-    const types = ["uint16"];
-    const encoding = ethers.utils.defaultAbiCoder.encode(types, value);
+    const value = [
+      534351,
+      "0x81cBB0aa06cB4ECeB64a1959e29509f109F58C29", //token address
+      100,
+      "transferFrom(address, address, uint256)",
+      "TRANSFER",
+      "0x981858eFA86aB7Fb614DC3b554B43d13F22c03f5", //mumbai
+      "0xcA51855FBA4aAe768DCc273349995DE391731e70", //address of the same network
+    ];
+    const type = [
+      "uint256",
+      "address",
+      "uint256",
+      "string",
+      "string",
+      "address",
+      "address",
+    ];
+    const encoding = ethers.utils.defaultAbiCoder.encode(type, value);
     setEncodedPayload(encoding);
   };
 

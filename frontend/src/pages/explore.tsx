@@ -1,11 +1,13 @@
 import { env } from "@/shared/environment";
-import { useContractRead } from "wagmi";
+import { useAccount, useContractRead } from "wagmi";
 import GovernanceFactory from "../../public/GovernanceFactory.json";
 import { useEffect, useState } from "react";
 import { CardGovernance } from "@/components/Card/CardGovernance";
 import { useRouter } from "next/router";
 import { GovernanceData } from "@/utils/type";
 import { AiOutlineSearch } from "react-icons/ai";
+import { getWalletClient } from "wagmi/actions";
+import { envConfigMappings } from "@/utils/config";
 
 function ExplorePage() {
   const [governances, setGovernances] = useState<{
@@ -15,14 +17,56 @@ function ExplorePage() {
     addresses: [],
     names: [],
   }); // ["0x00ABdb2FbBC763B6B4A8700E10550Ad74daC4d43"
+  const [walletAddress, setWalletAddress] = useState<string>("");
+  const [chainId, setChainId] = useState<number>(0);
+  const [governanceAddress, setGovernanceAddress] = useState<string>(""); // ["0x00ABdb2FbBC763B6B4A8700E10550Ad74daC4d43"
   const router = useRouter();
+  const { address } = useAccount();
   const { data } = useContractRead({
-    address: "0x4b4526247b7890ef5f8844de4dd9bf42fa420f4a",
+    address: governanceAddress as `0x${string}`,
     abi: GovernanceFactory.abi,
     functionName: "getGovernances",
   });
 
+  const RETRY_COUNT = 5;
+  const RETRY_DELAY = 1000; // 1 second
+
   useEffect(() => {
+    const getChain = async () => {
+      setWalletAddress(address as string);
+
+      let client;
+      let retry = 0;
+      while (retry < RETRY_COUNT && !client) {
+        client = await getWalletClient();
+        if (!client) {
+          retry++;
+          await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY));
+        }
+      }
+
+      console.log(client);
+
+      if (!client) {
+        console.error("Failed to fetch wallet client after multiple attempts");
+        return;
+      }
+
+      const chainId = await client.getChainId();
+      if (!chainId) {
+        alert("Please connect wallet");
+        return;
+      }
+
+      setChainId(chainId);
+      const contractAddress = envConfigMappings[chainId];
+      if (!contractAddress) {
+        alert("Chain not supported");
+        return;
+      }
+      setGovernanceAddress(contractAddress.factory_address);
+    };
+    getChain();
     console.log(data);
     const processedData = data as GovernanceData;
     if (processedData && processedData["0"] && processedData["1"]) {
@@ -54,7 +98,6 @@ function ExplorePage() {
         </button>
       </div>
       <div className="m-8 container w-2/3 mx-auto grid grid-cols-2 gap-8 justify-center items-center">
-                
         {governances.addresses.length ? (
           governances.addresses.map((address, key) => {
             const name = governances.names[key];

@@ -1,5 +1,13 @@
 import DropdownButtonProfile from "@/components/Button/DropdownButtonProposal";
-import { Button, Card, Divider, Input, Textarea } from "@chakra-ui/react";
+import {
+  Button,
+  Card,
+  Divider,
+  Input,
+  Modal,
+  Select,
+  Textarea,
+} from "@chakra-ui/react";
 import { Fragment, JSX, SVGProps, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import {
@@ -10,6 +18,8 @@ import {
 import ModalSpark from "@/components/Modal/ModalSpark";
 import ModalERC20 from "@/components/Modal/ModalERC20";
 import ModalCustomPayload from "@/components/Modal/ModalCustomPayload";
+import axios from "axios";
+import { chainID, templateConfig } from "@/utils/config";
 
 function AddProposalTransaction() {
   const [title, setTitle] = useState("");
@@ -53,6 +63,42 @@ function AddProposalTransaction() {
     setIsOpenCustomPayload(true);
   };
 
+  useEffect(() => {
+    const getVault = async () => {
+      const result = await axios.get(
+        `http://localhost:3001/governance/get-vaults/${go}`
+      );
+    };
+  }, []);
+
+  const filterTemplate = (templateName: string) => {
+    if (templateName === "Spark Protocol") {
+      return (
+        <div>
+          <h1>Spark Protocol</h1>
+          <div>
+            <h2>Type of transaction</h2>
+            <Select
+              placeholder="Select transaction type"
+              onChange={(e) => handleTxnChange(e.target.value)}
+            >
+              <option value="TRANSFER">TRANSFER</option>
+            </Select>
+          </div>
+          <div>
+            <h2>From Address</h2>
+            <Select
+              placeholder="Select vault"
+              onChange={(e) => handleTxnChange(e.target.value)}
+            >
+              {}
+            </Select>
+          </div>
+        </div>
+      );
+    }
+  };
+
   const handleTest = () => {}; //function kosong buat tes program biar jalan aja
 
   return (
@@ -63,24 +109,6 @@ function AddProposalTransaction() {
             New Proposal: DAT Transaction
           </h1>
           <Divider colorScheme="gray" className="my-4" />
-          <div className="flex flex-row w-full my-1">
-            <div className="w-1/4 p-2 bg-transparent">
-              <h1 className="text-lg text-left font-semibold mr-4 mt-1">
-                Title:
-              </h1>
-            </div>
-            <div className="w-3/4 p-2 bg-transparent">
-              <Input
-                className="w-full text-sm font-medium text-right"
-                width="full"
-                variant="outline"
-                borderColor="gray"
-                placeholder="Title..."
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-              />
-            </div>
-          </div>
           <div className="flex flex-row w-full my-1">
             <div className="w-1/4 p-2 bg-transparent">
               <h1 className="text-lg text-left font-semibold mr-4 mt-1">
@@ -104,15 +132,23 @@ function AddProposalTransaction() {
           <div className="flex flex-row w-full my-1">
             <div className="w-1/4 p-2 bg-transparent">
               <h1 className="text-lg text-left font-semibold mr-4 mt-1">
-                Destination Chain:
+                Destination Chain ID:
               </h1>
             </div>
             <div className="w-3/4 p-2 bg-transparent">
-              <DropdownButtonProfile
-                values={["Mumbai", "Mantle", "Scroll", "Sepolia"]}
-                defaultValue={selectedDestinationChain}
-                onDurationChange={handleChainChange}
-              />
+              <Select>
+                {chainID ? (
+                  chainID.map((chain, index) => {
+                    return (
+                      <option key={index} value={chain.chainId}>
+                        {chain.network}
+                      </option>
+                    );
+                  })
+                ) : (
+                  <></>
+                )}
+              </Select>
             </div>
           </div>
           <div className="flex flex-row w-full my-1">
@@ -122,23 +158,41 @@ function AddProposalTransaction() {
               </h1>
             </div>
             <div className="w-3/4 p-2 bg-transparent">
-              <DropdownButtonProfile
+              {/* <DropdownButtonProfile
                 values={["Spark Protocol", "Send ERC20 / NFTs", "Uniswap"]}
                 defaultValue={selectedTxnPresets}
                 onDurationChange={handleTxnChange}
-              />
+              /> */}
+              <Select
+                placeholder="Select Template"
+                onChange={(e) => handleTxnChange(e.target.value)}
+              >
+                {templateConfig ? (
+                  templateConfig.map((template, index) => {
+                    return (
+                      <option key={index} value={template.name}>
+                        {template.name}
+                      </option>
+                    );
+                  })
+                ) : (
+                  <></>
+                )}
+              </Select>
             </div>
-            <ModalSpark
+            {}
+
+            {/* <ModalSpark
               isOpenModal={isOpenSpark}
               onCloseModal={() => setIsOpenSpark(false)}
               OnClickGeneratePayloadMarket={handleTest} //Change to real function
               OnClickGeneratePayloadsDAI={handleTest} //Change to real function
-            />
-            <ModalERC20
+            /> */}
+            {/* <ModalERC20
               isOpenModal={isOpenERC20}
               onCloseModal={() => setIsOpenERC20(false)}
               OnClickGeneratePayload={handleTest} //Change to real function
-            />
+            /> */}
           </div>
           <div className="flex flex-row w-full my-1">
             <div className="w-1/4 p-2 bg-transparent">
