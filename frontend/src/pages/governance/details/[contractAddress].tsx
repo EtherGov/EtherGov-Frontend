@@ -80,6 +80,8 @@ function GovernanceDetail() {
             <option value="80001">Mumbai</option>
             <option value="11155111">Sepolia</option>
             <option value="5">Goerli</option>
+            <option value="534351">Scroll Sepolia</option>
+            <option value="5001">Mantle Testnet</option>
           </Select>
           <Button onClick={handleDeployAA}>Deploy</Button>
         </div>

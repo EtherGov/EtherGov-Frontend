@@ -9,15 +9,15 @@ export const WalletContext = createContext<{
     setWallet: Dispatch<SetStateAction<ComethWallet | null>>;
     provider: ComethProvider | null;
     setProvider: Dispatch<SetStateAction<ComethProvider | null>>;
-    PayoutContract: ethers.Contract | null;
-    setPayoutContract: Dispatch<SetStateAction<any | null>>;
+    // PayoutContract: ethers.Contract | null;
+    // setPayoutContract: Dispatch<SetStateAction<any | null>>;
   }>({
     wallet: null,
     setWallet: () => {},
     provider: null,
     setProvider: () => {},
-    PayoutContract: null,
-    setPayoutContract: () => {},
+    // PayoutContract: null,
+    // setPayoutContract: () => {},
   });
   
   export function WalletProvider({
@@ -27,8 +27,8 @@ export const WalletContext = createContext<{
   }): JSX.Element {
     const [wallet, setWallet] = useState<ComethWallet | null>(null);
     const [provider, setProvider] = useState<ComethProvider | null>(null);
-    const [PayoutContract, setPayoutContract] =
-      useState<ethers.Contract | null>(null);
+    // const [PayoutContract, setPayoutContract] =
+    //   useState<ethers.Contract | null>(null);
   
     return (
       <WalletContext.Provider
@@ -37,8 +37,8 @@ export const WalletContext = createContext<{
           setWallet,
           provider,
           setProvider,
-          PayoutContract,
-          setPayoutContract,
+          // PayoutContract,
+          // setPayoutContract,
         }}
       >
         {children}
@@ -52,15 +52,16 @@ export function useWalletContext() {
     setWallet,
     provider,
     setProvider,
-    PayoutContract,
-    setPayoutContract,
+    // PayoutContract,
+    // setPayoutContract,
   } = useContext(WalletContext);
+  console.log("walletContext", provider)
   return {
     wallet,
     setWallet,
     provider,
     setProvider,
-    PayoutContract,
-    setPayoutContract,
+    // PayoutContract,
+    // setPayoutContract,
   };
 }
