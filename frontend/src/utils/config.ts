@@ -8,13 +8,13 @@ export const envConfigMappings: {
 } = {
   11155111: {
     chainId: 11155111,
-    factory_address: "0x274c190aea5383886b599158f0b8d518294a0871",
+    factory_address: "0xf6a6f26ddbf9ab33bd0ffb58c4b9f4df43e6075d",
     mailbox_address: "0xCC737a94FecaeC165AbCf12dED095BB13F037685",
     pay_master_address: "0x8f9C3888bFC8a5B25AED115A82eCbb788b196d2a",
   },
   80001: {
     chainId: 80001,
-    factory_address: "0x52ba391a003689ae76bb7c1ac4cfc24747c8ea2a",
+    factory_address: "0xb3f4b70f1e65069961df9568176e910aa2efb8d3",
     mailbox_address: "0xCC737a94FecaeC165AbCf12dED095BB13F037685",
     pay_master_address: "0x8f9C3888bFC8a5B25AED115A82eCbb788b196d2a",
   },
