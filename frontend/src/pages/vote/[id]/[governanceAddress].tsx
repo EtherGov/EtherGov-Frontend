@@ -4,30 +4,30 @@ import { Progress } from "@chakra-ui/react";
 import ConnectComethWallet from "@/components/Cometh/comethConnectWallet";
 import SismoConnectFunction from "@/components/Sismo/SismoConnect";
 import { useWalletAuth } from "@/components/Cometh/comethWalletAuth";
-import  { ComethGaslessFunction } from "@/components/Cometh/comethGaslessFunction";
-import {
-  ComethApproveFunction,
-} from "@/components/Cometh/comethApprove";
+import { ComethGaslessFunction } from "@/components/Cometh/comethGaslessFunction";
+import { ComethApproveFunction } from "@/components/Cometh/comethApprove";
 import { useAccount, useContractRead } from "wagmi";
 import { useRouter } from "next/router";
 import Governance from "../../../../public/Governance.json";
-import ApproveNftMetamask,{ getAllNFts } from "@/components/ApproveProposal/approveMetamask";
+import ApproveNftMetamask, {
+  getAllNFts,
+} from "@/components/ApproveProposal/approveMetamask";
 
 interface Proposal {
   description: string;
-  duration: bigint; 
+  duration: bigint;
   ended: boolean;
   executed: boolean;
   groupId: string;
-  id: bigint; 
+  id: bigint;
   messageBody: string;
   nftAddress: string;
   proposedAddress: string;
-  sourceValue: bigint; 
+  sourceValue: bigint;
   targetAddress: string;
   targetChain: number;
   tokenAddressSource: string;
-  votes: bigint; 
+  votes: bigint;
   votesNeeded: bigint;
 }
 
@@ -52,7 +52,7 @@ const ProposalZoom: FC = () => {
     "BAYC's DAT is capitalized with an initial 100k DAI. In this case, depositing this 100k for sDAI in order to earn 5% yield is a risk-free action."
   );
 
-  const { address, isConnecting, isDisconnected } = useAccount()
+  const { address, isConnecting, isDisconnected } = useAccount();
 
   const [dateEnacted, setDateEnacted] = useState("20/10/2023");
 
@@ -60,18 +60,18 @@ const ProposalZoom: FC = () => {
 
   const [sismoVerfied, setsismoVerfied] = useState<string>("init");
 
-  const [loggedInAddress, setLoggedInAddress] = useState<string | null>(address?.toString() || null);
+  const [loggedInAddress, setLoggedInAddress] = useState<string | null>(
+    address?.toString() || null
+  );
 
   const [tokenId, setTokenId] = useState<number>(0);
 
-  const[groupId, setGroupId] = useState<string>("")
+  const [groupId, setGroupId] = useState<string>("");
 
   const [isClient, setIsClient] = useState(false);
 
-
   useEffect(() => {
     setLoggedInAddress(address || null);
-
   }, [address]);
 
   // useEffect(() => {
@@ -79,13 +79,23 @@ const ProposalZoom: FC = () => {
   // }, []);
 
   async function fetchTokenId() {
-    console.log("loggedInAddress",loggedInAddress)
-    console.log("nft address",selectedProposal.nftAddress)
-    // tokenId == await getAllNFts(loggedInAddress, String(selectedProposal.nftAddress))
-    setTokenId(await getAllNFts(loggedInAddress, String(selectedProposal.nftAddress)));
+    if (!selectedProposal) {
+      console.error("Cannot fetch token ID because selectedProposal is null.");
+      return; // Just return instead of throwing an error
+    }
 
-    const oneToken=(await getAllNFts(loggedInAddress, String(selectedProposal.nftAddress)));
-    return oneToken
+    console.log("loggedInAddress", loggedInAddress);
+    console.log("nft address", selectedProposal.nftAddress);
+    // tokenId == await getAllNFts(loggedInAddress, String(selectedProposal.nftAddress))
+    setTokenId(
+      await getAllNFts(loggedInAddress, String(selectedProposal.nftAddress))
+    );
+
+    const oneToken = await getAllNFts(
+      loggedInAddress,
+      String(selectedProposal.nftAddress)
+    );
+    return oneToken;
   }
 
   // when in the page check if comethconnected exist == done, if done remove it //show
@@ -93,33 +103,39 @@ const ProposalZoom: FC = () => {
   // when clicking approve, set comethConnected to done
 
   useEffect(() => {
-    ComethGaslessFunction(String(newGovernanceAddress))
+
+    ComethGaslessFunction(String(newGovernanceAddress));
+
     setIsClient(true);
-  
+
     fetchTokenId();
 
     // localStorage.removeItem('comethConnected');
 
-    if(window.localStorage.getItem("comethConnected") == "done"){
-      localStorage.removeItem('comethConnected');
+    if (window.localStorage.getItem("comethConnected") == "done") {
+      window.localStorage.removeItem("comethConnected");
     }
-    console.log("comethConnected",window.localStorage.getItem("comethConnected")=="true")
 
-    if(window.localStorage.getItem("comethConnected")=="true"){
-      console.log("comethConnected",window.localStorage.getItem("comethConnected"))
+    if (window.localStorage.getItem("comethConnected") == "true") {
+      console.log(
+        "comethConnected",
+        window.localStorage.getItem("comethConnected")
+      );
       // localStorage.removeItem('comethConnected');
-      connect()
+      connect();
     }
   }, []);
 
   useEffect(() => {
     // setGroupId(String(selectedProposal.groupId))
-    console.log("groupID", groupId)
+    console.log("groupID", groupId);
   }, [groupId]);
 
   const [newId, setNewId] = useState("");
   const [newGovernanceAddress, setNewGovernanceAddress] = useState("");
-  const [selectedProposal, setSelectedProposal] = useState<Proposal[]>([]); //selectedProposal ini data yang di fetch
+  const [selectedProposal, setSelectedProposal] = useState<Proposal | null>(
+    null
+  ); //selectedProposal ini data yang di fetch
 
   useEffect(() => {
     const { id, governanceAddress } = router.query;
@@ -133,10 +149,6 @@ const ProposalZoom: FC = () => {
     functionName: "returnAllProposal",
   });
 
-  // function handleClick (){
-  //   console.log("asdasd proposal", String(selectedProposal.groupId))
-  // }
-
   useEffect(() => {
     // 'data1' is unknown, so we'll assert it as any, then check if it behaves as an array.
     const proposals = data1 as any;
@@ -148,160 +160,153 @@ const ProposalZoom: FC = () => {
       // Access the proposal by its index only if it's within the array bounds
       if (index >= 0 && index < proposals.length) {
         setSelectedProposal(proposals[index]);
-        setGroupId(String(proposals[index].groupId))
-        
+        setGroupId(String(proposals[index].groupId));
       }
     }
   }, [data1, newId]); //
 
-  useEffect(() =>{
-    console.log("PAGE")
-    console.log("id", Number( selectedProposal))
-    console.log("nft address", String(selectedProposal.nftAddress))
-    console.log("groupID", groupId)
+  useEffect(() => {
+    // ComethGaslessFunction(String(newGovernanceAddress));
+
+    // if (window.localStorage.getItem("comethConnected") == "done") {
+    //   window.localStorage.removeItem("comethConnected");
+    // }
+
+    // if (window.localStorage.getItem("comethConnected") == "true") {
+    //   console.log(
+    //     "comethConnected",
+    //     window.localStorage.getItem("comethConnected")
+    //   );
+    //   connect();
+    // }
+
+    if (!selectedProposal) {
+      console.error("Cannot fetch token ID because selectedProposal is null.");
+      return; // Just return instead of throwing an error
+    }
+
+    console.log("PAGE");
+    console.log("id", Number(selectedProposal));
+    console.log("nft address", String(selectedProposal.nftAddress));
+    console.log("groupID", groupId);
 
     fetchTokenId();
-    console.log("tokenId", tokenId)
-
-  })
+    console.log("tokenId", tokenId);
+  });
   //make function to check cometh wallet address in local storage.
 
-  
-
   return (
-    <div className="bg-gradient-to-r from-rose-200 to-teal-200 min-h-screen">
-      {/* <button onClick={handleClick}>click</button> */}
-      <div className=" pt-12 w-2/3 mx-auto">
-        <Card className="p-8 mx-auto justify-center">
-          <h1 className="text-3xl font-semibold text-left justify-center">
-            {selectedProposal.description}
-          </h1>
-          <Divider colorScheme="gray" className="my-4" />
-          <h1 className="text-xl font-semibold text-left justify-center mt-2">
-            Group ID: {selectedProposal.groupId}
-          </h1>
-          {/* <div className="w-full p-2 bg-transparent mt-2">
-            <Textarea
-              className="text-md font-medium text-left"
-              rows={4}
-              cols={70}
-              variant="outline"
-              borderColor="gray"
-              placeholder="Description..."
-              value={proposalDesc}
-              readOnly
-            />
-          </div> */}
-          <h1 className="text-xl font-semibold text-left justify-center mt-4">
-            Proposal Details:
-          </h1>
-          <br />
-          {/* <div className="flex flex-row mt-2">
-            <h1 className="text-md font-medium text-left justify-center">
-              Date Enacted:
-            </h1>
-            <h1 className="text-md font-medium text-left justify-center ml-4">
-              {dateEnacted}
-            </h1>
-          </div> */}
-          <div className="flex flex-row mt-2 mb-8">
-            <h1 className="text-md font-medium text-left justify-center">
-              Voting Period:
-            </h1>
-            <h1 className="text-md font-medium text-left justify-center ml-4">
-              {Number(selectedProposal.duration)}
-            </h1>
+    <div>
+      {selectedProposal ? (
+        <div className="bg-gradient-to-r from-rose-200 to-teal-200 min-h-screen">
+          <div className=" pt-12 w-2/3 mx-auto">
+            <Card className="p-8 mx-auto justify-center">
+              <h1 className="text-3xl font-semibold text-left justify-center">
+                {selectedProposal.description}
+              </h1>
+              <Divider colorScheme="gray" className="my-4" />
+              <h1 className="text-xl font-semibold text-left justify-center mt-2">
+                Group ID: {selectedProposal.groupId}
+              </h1>
+
+              <h1 className="text-xl font-semibold text-left justify-center mt-4">
+                Proposal Details:
+              </h1>
+              <br />
+
+              <div className="flex flex-row mt-2 mb-8">
+                <h1 className="text-md font-medium text-left justify-center">
+                  Voting Period:
+                </h1>
+                <h1 className="text-md font-medium text-left justify-center ml-4">
+                  {Number(selectedProposal.duration)}
+                </h1>
+              </div>
+              <div className="flex flex-row mt-2 mb-8">
+                <h1 className="text-md font-medium text-left justify-center">
+                  Voted:
+                </h1>
+                <h1 className="text-md font-medium text-left justify-center ml-4">
+                  {Number(selectedProposal.votes)}
+                </h1>
+              </div>
+              <div className="flex flex-row mt-2 mb-8">
+                <h1 className="text-md font-medium text-left justify-center">
+                  Vote needed:
+                </h1>
+                <h1 className="text-md font-medium text-left justify-center ml-4">
+                  {Number(selectedProposal.votesNeeded)}
+                </h1>
+              </div>
+
+              <br></br>
+              {isClient &&
+              window.localStorage.getItem("comethConnected") == "false" ? (
+                <h1>Verified using Metamask</h1>
+              ) : (
+                <ConnectComethWallet
+                  isConnected={isConnected}
+                  isConnecting={isComethConnecting}
+                  connect={connect}
+                  connectionError={connectionError}
+                  wallet={wallet}
+                  walletAddress={walletAddress}
+                  setLoggedInAddress={setLoggedInAddress}
+                />
+              )}
+
+              <br />
+
+              {/* <ComethApprove/> */}
+              {/* <ComethGaslessTransaction/> */}
+              {groupId && loggedInAddress ? (
+                <SismoConnectFunction
+                  sismoGroupId={groupId}
+                  setsismoVerfied={setsismoVerfied}
+                  comethWallet={
+                    window.localStorage.getItem("walletAddress")
+                      ? (window.localStorage.getItem("walletAddress") as string)
+                      : "null"
+                  }
+                />
+              ) : (
+                <></>
+              )}
+
+              {sismoVerfied === "verified" &&
+                (window.localStorage.getItem("comethConnected") === "true" ? (
+                  <Button
+                    bg="black"
+                    color="white"
+                    _hover={{ opacity: 0.7 }}
+                    className="w-1/2 mx-auto my-8 items-center text-center justify-center"
+                    onClick={() =>
+                      ComethApproveFunction(
+                        Number(selectedProposal.id),
+                        fetchTokenId(),
+                        String(newGovernanceAddress),
+                        selectedProposal.nftAddress
+                      )
+                    }
+                  >
+                    Approve Proposal with Cometh
+                  </Button>
+                ) : (
+                  <ApproveNftMetamask
+                    proposalId={Number(selectedProposal.id)}
+                    tokenId={String(fetchTokenId())}
+                    deployedContractAddress={String(newGovernanceAddress)}
+                    nftContractAddress={String(selectedProposal.nftAddress)}
+                  />
+                ))}
+
+              {/* enable cometh wallet when sismoVerfied state is "verified" */}
+            </Card>
           </div>
-          <div className="flex flex-row mt-2 mb-8">
-            <h1 className="text-md font-medium text-left justify-center">
-              Voted:
-            </h1>
-            <h1 className="text-md font-medium text-left justify-center ml-4">
-              {Number(selectedProposal.votes)}
-            </h1>
-          </div>
-          <div className="flex flex-row mt-2 mb-8">
-            <h1 className="text-md font-medium text-left justify-center">
-              Vote needed:
-            </h1>
-            <h1 className="text-md font-medium text-left justify-center ml-4">
-              {Number(selectedProposal.votesNeeded)}
-            </h1>
-          </div>
-          {/* <Progress value={77} colorScheme="green" />
-          <h1 className="text-md text-right justify-center">
-            Quorum: 100 Approvals
-          </h1>
-          <h1 className="text-md text-right justify-center">
-            Current: 77 Approvals
-          </h1> */}
-          {/* <h1 className="text-xl font-semibold text-center justify-center mt-8">
-            Weight: 100 $APE
-          </h1> */}
-          <br></br>
-          {isClient && window.localStorage.getItem("comethConnected")=="false"?(
-          <h1>Verified using Metamask</h1>
-          ):(
-          <ConnectComethWallet
-            isConnected={isConnected}
-            isConnecting={isComethConnecting}
-            connect={connect}
-            connectionError={connectionError}
-            wallet={wallet}
-            walletAddress={walletAddress}
-            setLoggedInAddress={setLoggedInAddress}
-          />)}
-
-
-          <br />
-
-          {/* <ComethApprove/> */}
-          {/* <ComethGaslessTransaction/> */}
-          {
-            groupId && loggedInAddress?<SismoConnectFunction 
-            sismoGroupId= {groupId}
-            setsismoVerfied={setsismoVerfied}
-            comethWallet={window.localStorage.getItem("walletAddress")
-              ? 
-              window.localStorage.getItem("walletAddress") as string : "null" }
-          />
-          : <></>
-          }
-
-{
-  sismoVerfied === "verified" && (
-    window.localStorage.getItem("comethConnected") === "true" ? (
-      <Button
-        bg="black"
-        color="white"
-        _hover={{ opacity: 0.7 }}
-        className="w-1/2 mx-auto my-8 items-center text-center justify-center"
-        onClick={() => 
-          ComethApproveFunction(
-            Number(selectedProposal.id),
-            fetchTokenId(),
-            String(newGovernanceAddress),
-            selectedProposal.nftAddress
-          )
-        }
-      >
-        Approve Proposal with Cometh
-      </Button>
-    ) : (
-      <ApproveNftMetamask 
-        proposalId={Number(selectedProposal.id)}  
-        tokenId={String(fetchTokenId())}
-        deployedContractAddress={String(newGovernanceAddress)}
-        nftContractAddress={String(selectedProposal.nftAddress)}
-      />
-    )
-  )
-}
-
-
-          {/* enable cometh wallet when sismoVerfied state is "verified" */}
-        </Card>
-      </div>
+        </div>
+      ) : (
+        <></>
+      )}
     </div>
   );
 };

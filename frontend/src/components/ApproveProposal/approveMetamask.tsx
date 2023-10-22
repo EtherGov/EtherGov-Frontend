@@ -57,7 +57,7 @@ const ApproveMetamask: React.FC<ApproveMetamaskProps> = ({ proposalId, tokenId, 
     })
     function CallContract() {
         if(window.localStorage.getItem("comethConnected")){
-            localStorage.removeItem('comethConnected');
+            window.localStorage.removeItem('comethConnected');
         }
         write({args: [proposalId,tokenId],})
     }
