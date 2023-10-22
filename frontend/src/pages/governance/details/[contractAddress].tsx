@@ -106,9 +106,10 @@ function GovernanceDetail() {
     router.push(`/vote/${id}/${governanceAddress}`);
   };
 
+  function handleExecute() {}
+
   return (
     <div className="bg-gradient-to-r from-rose-200 to-teal-200 min-h-screen">
-
       <div className="flex justify-center">
         <div className="mt-10 p-10 w-[1000px] border-solid border-4 bg-white rounded-3xl ">
           <h1 className="text-[30px]">Governance Detail</h1>
@@ -128,7 +129,7 @@ function GovernanceDetail() {
 
       {isCouncilMember() ? (
         <div className="flex justify-center">
-          <div className="mt-10 p-10 w-[1000px] border-solid border-4">
+          <div className="mt-10 p-10 w-[1000px] border-solid border-4 bg-white rounded-3xl">
             <h1 className="text-[30px]">Council&apos;s Privileges</h1>
             <hr className="border-t-4 mb-6  border-gray-400 w-full" />
 
@@ -218,17 +219,31 @@ function GovernanceDetail() {
                                 </Text>
                               </Box>
                               <div>
-                                {!isCouncilMember() && ( // If the user is NOT a council member, show the button
+                                {!isCouncilMember() && ( 
                                   <div className="flex items-center justify-center">
                                     <button
                                       onClick={() => handleNavigate(item.id)}
-                                      className="w-96 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                                      className={`w-96 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ${
+                                        item.readyToExecute
+                                          ? "opacity-50 cursor-not-allowed"
+                                          : ""
+                                      }`}
+                                      disabled={item.readyToExecute} 
                                     >
                                       Vote
                                     </button>
                                   </div>
                                 )}
-                                {/* If the user is a council member, we display nothing as per requirement */}
+                              </div>
+                              <div className="flex items-center justify-center">
+                                {item.readyToExecute === true && (
+                                  <button
+                                    className="w-96 bg-sky-400 hover:bg-sky-700 text-white font-bold py-2 px-4 rounded"
+                                    onClick={handleExecute}
+                                  >
+                                    Execute
+                                  </button>
+                                )}
                               </div>
                             </Stack>
                           </CardBody>
@@ -242,7 +257,7 @@ function GovernanceDetail() {
               </TabPanel>
 
               <TabPanel>
-                <h1  className=" text-xl font-bold mt-3">Passed Proposals</h1>
+                <h1 className=" text-xl font-bold mt-3">Passed Proposals</h1>
                 <div>
                   {passedProposals ? (
                     passedProposals.map((item, key) => {
@@ -290,7 +305,7 @@ function GovernanceDetail() {
               </TabPanel>
 
               <TabPanel>
-                <h1  className=" text-xl font-bold mt-3">Failed Proposals</h1>
+                <h1 className=" text-xl font-bold mt-3">Failed Proposals</h1>
                 <div>
                   {failedProposals ? (
                     failedProposals.map((item, key) => {
