@@ -14,7 +14,7 @@ export const envConfigMappings: {
   },
   80001: {
     chainId: 80001,
-    factory_address: "0xaa704f9a7f0de2146d71b5357c7ab8856d281b0d",
+    factory_address: "0xf03b6d96277abba8827e2742737cd8b8036af208",
     mailbox_address: "0xCC737a94FecaeC165AbCf12dED095BB13F037685",
     pay_master_address: "0x8f9C3888bFC8a5B25AED115A82eCbb788b196d2a",
   },

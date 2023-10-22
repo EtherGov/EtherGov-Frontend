@@ -106,7 +106,29 @@ function GovernanceDetail() {
     router.push(`/vote/${id}/${governanceAddress}`);
   };
 
-  function handleExecute() {}
+  async function handleExecute(id: number) {
+    try {
+      console.log(id);
+      const allProposal = data2 as any[];
+      const proposal = allProposal.filter((p) => Number(p.id) === Number(id));
+      console.log(proposal);
+      const result = await axios.post(
+        "http://localhost:3001/governance/execute-proposal",
+        {
+          governance_address: router.query.contractAddress,
+          messageBody: proposal[0].messageBody,
+          proposalId: Number(proposal[0].id),
+        }
+      );
+
+      console.log(result.data);
+      if (result.data.status === 200) {
+        alert("Proposal executed");
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
 
   return (
     <div className="bg-gradient-to-r from-rose-200 to-teal-200 min-h-screen">
@@ -219,7 +241,7 @@ function GovernanceDetail() {
                                 </Text>
                               </Box>
                               <div>
-                                {!isCouncilMember() && ( 
+                                {!isCouncilMember() && (
                                   <div className="flex items-center justify-center">
                                     <button
                                       onClick={() => handleNavigate(item.id)}
@@ -228,7 +250,7 @@ function GovernanceDetail() {
                                           ? "opacity-50 cursor-not-allowed"
                                           : ""
                                       }`}
-                                      disabled={item.readyToExecute} 
+                                      disabled={item.readyToExecute}
                                     >
                                       Vote
                                     </button>
@@ -239,7 +261,7 @@ function GovernanceDetail() {
                                 {item.readyToExecute === true && (
                                   <button
                                     className="w-96 bg-sky-400 hover:bg-sky-700 text-white font-bold py-2 px-4 rounded"
-                                    onClick={handleExecute}
+                                    onClick={() => handleExecute(item.id)}
                                   >
                                     Execute
                                   </button>
