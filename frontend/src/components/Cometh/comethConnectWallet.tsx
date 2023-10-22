@@ -23,8 +23,15 @@ const ConnectComethWallet: React.FC<ConnectWalletProps> = ({
   walletAddress,
   setLoggedInAddress
 }) => {
+
+  // useEffect(() => {
+  //   if(window.localStorage.getItem("comethConnected")=="true"){
+  //     connect
+  //   }
+  // }, []);
+
   useEffect(() => {
-    console.log("Wallet changed: ", wallet);
+    console.log("Wallet", wallet);
   }, [wallet]);
 
   const getTextButton = () => {
@@ -32,16 +39,20 @@ const ConnectComethWallet: React.FC<ConnectWalletProps> = ({
     // console.log("cometh walletAddress", walletAddress)
     if (isConnected) {
       setLoggedInAddress(walletAddress)
+      window.localStorage.setItem("comethConnected", "true");
       return (
         // setComethLoggedIn(true),
         <>
-          <h1 className="border-2 p-5 rounded-xl"
-          // href={`https://mumbai.polygonscan.com/address/${wallet.getAddress()}`}
-          // target="_blank"
-          >
+          <h1 className="border-2 p-5 rounded-xl">
             <span className=" text-[#1F4172]">COMETH </span>Wallet Connected:
             <br />
-            {walletAddress}
+            <a 
+            href={`https://mumbai.polygonscan.com/address/${walletAddress}`}
+            className="text-[#1F4172]"
+            >
+           {walletAddress}
+
+            </a>
           </h1>
         </>
       );

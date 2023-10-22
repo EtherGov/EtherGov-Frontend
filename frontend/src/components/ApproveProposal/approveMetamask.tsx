@@ -18,17 +18,17 @@ const alchemy = new Alchemy(settings);
 
 export async function getAllNFts(walletAddress: any, nftAddress: any): Promise<number> {
     try {
-        console.log("nftAddress",nftAddress);
+        // console.log("nftAddress",nftAddress);
 
         const nftsForOwner = await alchemy.nft.getNftsForOwner(walletAddress);
 
-        console.log(nftsForOwner.ownedNfts);
+        // console.log(nftsForOwner.ownedNfts);
 
         for (const item of nftsForOwner.ownedNfts) {
             // console.log("Found:", item);
 
             if (item.contract.address.toLowerCase() === nftAddress.toLowerCase()) {
-                console.log("Token ID:", item.tokenId);
+                // console.log("Token ID:", item.tokenId);
                 return parseInt(item.tokenId);
             }
         }
@@ -53,14 +53,23 @@ const ApproveMetamask: React.FC<ApproveMetamaskProps> = ({ proposalId, tokenId, 
         abi: Governance.abi,
         functionName: 'stakeAndVote',
     })
-     
+
+
+
+    function CallContract() {
+        if(window.localStorage.getItem("comethConnected")){
+            localStorage.removeItem('comethConnected');
+        }
+        write({args: [proposalId,tokenId],})
+    }
+
     return (
         <Button
             bg="black"
             color="white"
             _hover={{ opacity: 0.7 }}
             className="w-1/2 mx-auto my-8 items-center text-center justify-center"
-            onClick={() => write({args: [proposalId,tokenId],})}
+            onClick={() => CallContract()}
         >
             Approve Proposal with MetaMask
         </Button>

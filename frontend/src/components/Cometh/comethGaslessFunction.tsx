@@ -46,3 +46,33 @@ const ComethGaslessTransaction: React.FC = () => {
 };
 
 export default ComethGaslessTransaction;
+
+
+export async function ComethGaslessFunction(contractAddress:string): Promise<any> {
+    try {
+        const response = await fetch('https://api.connect.cometh.io/sponsored-address', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'apisecret': env.comethSecret,
+            },
+            body: JSON.stringify({
+                targetAddress: contractAddress as string
+            })
+        });
+
+        if (!response.ok) {
+            if(response.status === 400){
+                console.log("contract gasless already")
+            }else{
+                console.error(`API error with status: ${response.status}`);
+            }
+            // throw new Error(`API error with status: ${response.status}`);
+        }
+        return await response.json();
+
+    } catch (error: any) {
+        console.error(error.message);
+        throw error;
+    }
+}
