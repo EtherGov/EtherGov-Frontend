@@ -107,9 +107,10 @@ function GovernanceDetail() {
   };
 
   return (
-    <div>
+    <div className="bg-gradient-to-r from-rose-200 to-teal-200 min-h-screen">
+
       <div className="flex justify-center">
-        <div className="mt-10 p-10 w-[1000px] border-solid border-4">
+        <div className="mt-10 p-10 w-[1000px] border-solid border-4 bg-white rounded-3xl ">
           <h1 className="text-[30px]">Governance Detail</h1>
           <hr className="mb-6 border-t-4  border-gray-400 w-full" />
           <p>List of Councils</p>
@@ -180,7 +181,7 @@ function GovernanceDetail() {
 
             <TabPanels>
               <TabPanel>
-                <h1>Active Proposals</h1>
+                <h1 className=" text-xl font-bold mt-3">Active Proposals</h1>
                 <div>
                   {activeProposals ? (
                     activeProposals.map((item, key) => {
@@ -241,7 +242,7 @@ function GovernanceDetail() {
               </TabPanel>
 
               <TabPanel>
-                <h1>Passed Proposals</h1>
+                <h1  className=" text-xl font-bold mt-3">Passed Proposals</h1>
                 <div>
                   {passedProposals ? (
                     passedProposals.map((item, key) => {
@@ -289,7 +290,7 @@ function GovernanceDetail() {
               </TabPanel>
 
               <TabPanel>
-                <h1>Failed Proposals</h1>
+                <h1  className=" text-xl font-bold mt-3">Failed Proposals</h1>
                 <div>
                   {failedProposals ? (
                     failedProposals.map((item, key) => {

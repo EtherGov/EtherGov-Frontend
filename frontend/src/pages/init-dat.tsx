@@ -125,9 +125,9 @@ export default function InitDat() {
   }, []);
 
   return (
-    <div className="flex justify-center">
-      <div className="mt-[30px] w-[900px] rounded-3xl  bg-gradient-to-r from-rose-100 to-teal-100">
-        <div className="flex flex-col px-[100px]">
+    <div className="flex justify-center bg-gradient-to-r from-rose-200 to-teal-200 min-h-screen">
+      <div className="mt-[30px] w-[900px]">
+        <div className="flex flex-col px-[100px] rounded-2xl border-2 bg-white">
           {/* INPUT */}
           <div>
             <h1 className=" mt-5 text-4xl font-extrabold">Initialize DAT</h1>
@@ -135,7 +135,7 @@ export default function InitDat() {
             <br />
 
             <div className="flex items-center gap-4">
-              <h2 className=" text-xl font-medium">DAO Name</h2>
+              <h2 className=" text-xl font-medium w-32">DAO Name</h2>
               <input
                 className="w-[585px] py-2 px-4 border-2 border-black bg-transparent focus:outline-none focus:border-gray-400 rounded-xl"
                 onChange={(e) => {
