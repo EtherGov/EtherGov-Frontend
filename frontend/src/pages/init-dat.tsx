@@ -145,7 +145,7 @@ export default function InitDat() {
             </div>
             <br />
 
-            <div>
+            {/* <div>
               <h2 className=" text-xl font-medium">IERC20 Token Address</h2>
               <input
                 className="w-[700px] py-2 px-4 border-2 border-black bg-transparent focus:outline-none focus:border-gray-400 rounded-xl"
@@ -153,7 +153,7 @@ export default function InitDat() {
                   setErc20(e.target.value);
                 }}
               />
-            </div>
+            </div> */}
 
             <div>
               {councilAddresses.map((address, index) => (
@@ -192,7 +192,7 @@ export default function InitDat() {
           {/* RENDER GOVERNANCE ADDRESS */}
           <div>
             {isLoading ? (
-              <p>Loading...</p>
+              <p className="border-2 m-5 p-3 text-center rounded-2xl bg-teal-500">Loading...</p>
             ) : isSuccess && !governanceAddress ? (
               <p className="border-2 m-5 p-3 text-center rounded-2xl bg-amber-300">
                 Waiting for Governance Address{" "}
