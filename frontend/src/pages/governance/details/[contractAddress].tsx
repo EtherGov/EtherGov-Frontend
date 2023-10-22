@@ -186,7 +186,7 @@ function GovernanceDetail() {
                   {activeProposals ? (
                     activeProposals.map((item, key) => {
                       return (
-                        <Card key={key}>
+                        <Card className="my-10" key={key}>
                           <CardHeader>
                             <Heading>{item.description}</Heading>
                           </CardHeader>
@@ -217,13 +217,18 @@ function GovernanceDetail() {
                                   Value: {Number(item.sourceValue)}
                                 </Text>
                               </Box>
-                              <div className="flex items-center justify-center">
-                                <button
-                                  onClick={() => handleNavigate(item.id)}
-                                  className="w-96 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                                >
-                                  Vote
-                                </button>
+                              <div>
+                                {!isCouncilMember() && ( // If the user is NOT a council member, show the button
+                                  <div className="flex items-center justify-center">
+                                    <button
+                                      onClick={() => handleNavigate(item.id)}
+                                      className="w-96 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                                    >
+                                      Vote
+                                    </button>
+                                  </div>
+                                )}
+                                {/* If the user is a council member, we display nothing as per requirement */}
                               </div>
                             </Stack>
                           </CardBody>
@@ -242,7 +247,7 @@ function GovernanceDetail() {
                   {passedProposals ? (
                     passedProposals.map((item, key) => {
                       return (
-                        <Card key={key}>
+                        <Card className="my-10" key={key}>
                           <CardHeader>
                             <Heading>{item.description}</Heading>
                           </CardHeader>
@@ -290,7 +295,7 @@ function GovernanceDetail() {
                   {failedProposals ? (
                     failedProposals.map((item, key) => {
                       return (
-                        <Card key={key}>
+                        <Card className="my-10" key={key}>
                           <CardHeader>
                             <Heading>{item.description}</Heading>
                           </CardHeader>
@@ -321,7 +326,7 @@ function GovernanceDetail() {
                                   Value: {Number(item.sourceValue)}
                                 </Text>
                                 <Text pt="2" fontSize="sm">
-                                  Value:{" "}
+                                  Expired:{" "}
                                   {new Date(
                                     Number(item.endDate) * 1000
                                   ).toDateString()}{" "}
