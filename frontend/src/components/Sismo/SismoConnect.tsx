@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import {
   SismoConnectButton,
   SismoConnectResponse,
@@ -26,31 +26,32 @@ const SismoConnectFunction: FC<SismoConnectFunctionProps> = ({ sismoGroupId, com
     useState<SismoConnectResponse>();
   const [pageState, setPageState] = useState<string>("init");
   const [error, setError] = useState<string>("");
-  console.log("groupId di sismo function", sismoGroupId)
-  
+  const [apiString, setApiString] = useState("")
+  // console.log("groupId di sismo function", sismoGroupId)
 
-  
-  const apiString='/api/verify/route?comethGroupId='+ sismoGroupId+"&comethWallet="+comethWallet
+  useEffect(() => {
+  if(window.localStorage.getItem("comethConnected") === "true"){
+    setApiString('/api/verify/route?comethGroupId='+ sismoGroupId+"&comethWallet="+comethWallet as string)
+  }
+  else{
+    setApiString('/api/verify/route?comethGroupId='+ sismoGroupId+"&comethWallet=null")
+  }
 
   console.log("apiString", apiString) 
   console.log("comethWallet", comethWallet) 
-  console.log("comethGroupId", sismoGroupId)
-  // console.log("STATS",comethWallet=="null")
+  console.log("comethGroupId", sismoGroupId)} ,[])
 
   return (
     <>
-      {/* <main className="main"> */}
-      {/* <Header /> */}
+      {/* {window.localStorage.getItem("comethConnected") == "true"?
+           <>true</>:<>false</>} */}
       {pageState == "init" ? (
         <>
           <SismoConnectButton
-            config={(comethWallet as string=="null")?
-              {appId: "0x081d495d9a48438002867986b3fdc187",}
-              :{
-                appId: "0x081d495d9a48438002867986b3fdc187",
-                vault:{impersonate:["0xbaf502f416aeed726883832b76322001034aad92"]}
-              }
-              
+            config={window.localStorage.getItem("comethConnected") == "true"?
+              {appId: "0x081d495d9a48438002867986b3fdc187",
+                vault:{impersonate:[comethWallet]}
+              }:{appId: "0x081d495d9a48438002867986b3fdc187",}
             }
             auths={AUTHS}
             claims={
@@ -63,7 +64,6 @@ const SismoConnectFunction: FC<SismoConnectFunctionProps> = ({ sismoGroupId, com
             signature={SIGNATURE_REQUEST}
             text="Prove With Sismo"
             onResponse={async (response: SismoConnectResponse) => {
-
               setSismoConnectResponse(response);
               setPageState("verifying");
               setsismoVerfied("verifying");
@@ -81,9 +81,12 @@ const SismoConnectFunction: FC<SismoConnectFunctionProps> = ({ sismoGroupId, com
                 setSismoConnectVerifiedResult(data);
                 setPageState("verified");
                 setsismoVerfied("verified");
-                if(comethWallet=="null"){
+                console.log("COMETH WALLET 12312312", comethWallet)
+                if(!window.localStorage.getItem("comethConnected")){
                   window.localStorage.setItem("comethConnected","false")
                 }
+                //APPROVE NFT STAKE
+
               } else {
                 setPageState("error");
                 setsismoVerfied("error");

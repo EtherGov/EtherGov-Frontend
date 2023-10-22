@@ -91,20 +91,21 @@ const ProposalZoom: FC = () => {
   // when clicking approve, set comethConnected to done
 
   useEffect(() => {
-    // ComethGaslessFunction(String(newGovernanceAddress))
+    ComethGaslessFunction(String(newGovernanceAddress))
     setIsClient(true);
   
     fetchTokenId();
 
-    localStorage.removeItem('comethConnected');
+    // localStorage.removeItem('comethConnected');
 
     if(window.localStorage.getItem("comethConnected") == "done"){
       localStorage.removeItem('comethConnected');
     }
-    if(window.localStorage.getItem("comethConnected")=="true"){
-      // console.log("comethConnected")
-      localStorage.removeItem('comethConnected');
+    console.log("comethConnected",window.localStorage.getItem("comethConnected")=="true")
 
+    if(window.localStorage.getItem("comethConnected")=="true"){
+      console.log("comethConnected",window.localStorage.getItem("comethConnected"))
+      // localStorage.removeItem('comethConnected');
       connect()
     }
   }, []);
@@ -130,9 +131,9 @@ const ProposalZoom: FC = () => {
     functionName: "returnAllProposal",
   });
 
-  function handleClick (){
-    console.log("asdasd proposal", String(selectedProposal.groupId))
-  }
+  // function handleClick (){
+  //   console.log("asdasd proposal", String(selectedProposal.groupId))
+  // }
 
   useEffect(() => {
     // 'data1' is unknown, so we'll assert it as any, then check if it behaves as an array.
@@ -164,7 +165,7 @@ const ProposalZoom: FC = () => {
 
   return (
     <div className="h-full">
-      <button onClick={handleClick}>click</button>
+      {/* <button onClick={handleClick}>click</button> */}
       <div className="mt-8 w-2/3 mx-auto">
         <Card className="my-8 p-8 mx-auto justify-center">
           <h1 className="text-3xl font-semibold text-left justify-center">
@@ -234,8 +235,9 @@ const ProposalZoom: FC = () => {
           </h1> */}
           <br></br>
           {isClient && window.localStorage.getItem("comethConnected")=="false"?(
-          <></>
-          ):(            <ConnectComethWallet
+          <h1>Verified using Metamask</h1>
+          ):(
+          <ConnectComethWallet
             isConnected={isConnected}
             isConnecting={isComethConnecting}
             connect={connect}
@@ -251,20 +253,18 @@ const ProposalZoom: FC = () => {
           {/* <ComethApprove/> */}
           {/* <ComethGaslessTransaction/> */}
           {
-            groupId && loggedInAddress? <SismoConnectFunction 
+            groupId && loggedInAddress?<SismoConnectFunction 
             sismoGroupId= {groupId}
             setsismoVerfied={setsismoVerfied}
-            comethWallet={isConnected==true 
-              // && loggedInAddress==window.localStorage.getItem("walletAddress")
+            comethWallet={window.localStorage.getItem("walletAddress")
               ? 
               window.localStorage.getItem("walletAddress") as string : "null" }
-          /> : <></>
+          />
+          : <></>
           }
 
           {sismoVerfied == "verified" ? (
-            loggedInAddress
-             &&  tokenId 
-             &&  window.localStorage.getItem("comethConnected")=="true" 
+            window.localStorage.getItem("comethConnected")=="true"
              ?(
               <Button
                 bg="black"

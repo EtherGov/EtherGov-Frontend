@@ -18,17 +18,17 @@ const alchemy = new Alchemy(settings);
 
 export async function getAllNFts(walletAddress: any, nftAddress: any): Promise<number> {
     try {
-        console.log("nftAddress",nftAddress);
+        // console.log("nftAddress",nftAddress);
 
         const nftsForOwner = await alchemy.nft.getNftsForOwner(walletAddress);
 
-        console.log(nftsForOwner.ownedNfts);
+        // console.log(nftsForOwner.ownedNfts);
 
         for (const item of nftsForOwner.ownedNfts) {
             // console.log("Found:", item);
 
             if (item.contract.address.toLowerCase() === nftAddress.toLowerCase()) {
-                console.log("Token ID:", item.tokenId);
+                // console.log("Token ID:", item.tokenId);
                 return parseInt(item.tokenId);
             }
         }
