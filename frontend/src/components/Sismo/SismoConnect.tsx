@@ -14,26 +14,28 @@ import {
 import { group } from "console";
 
 interface SismoConnectFunctionProps {
-  comethGroupId: string; // New parameter
+  sismoGroupId: string; // New parameter
   comethWallet:string;
   setsismoVerfied: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const SismoConnectFunction: FC<SismoConnectFunctionProps> = ({ comethGroupId,comethWallet, setsismoVerfied }) => {
+const SismoConnectFunction: FC<SismoConnectFunctionProps> = ({ sismoGroupId, comethWallet, setsismoVerfied }) => {
   const [sismoConnectVerifiedResult, setSismoConnectVerifiedResult] =
     useState<SismoConnectVerifiedResult>();
   const [sismoConnectResponse, setSismoConnectResponse] =
     useState<SismoConnectResponse>();
   const [pageState, setPageState] = useState<string>("init");
   const [error, setError] = useState<string>("");
-  console.log("groupId di sismo function", comethGroupId)
+  console.log("groupId di sismo function", sismoGroupId)
   
+
   
-  const apiString='/api/verify/route?comethGroupId='+ comethGroupId+"&comethWallet="+comethWallet
+  const apiString='/api/verify/route?comethGroupId='+ sismoGroupId+"&comethWallet="+comethWallet
 
   console.log("apiString", apiString) 
   console.log("comethWallet", comethWallet) 
-  console.log("comethGroupId", comethGroupId)
+  console.log("comethGroupId", sismoGroupId)
+  // console.log("STATS",comethWallet=="null")
 
   return (
     <>
@@ -42,19 +44,18 @@ const SismoConnectFunction: FC<SismoConnectFunctionProps> = ({ comethGroupId,com
       {pageState == "init" ? (
         <>
           <SismoConnectButton
-            config={comethWallet!=="null"?
-              // CONFIG
-              {
+            config={(comethWallet as string=="null")?
+              {appId: "0x081d495d9a48438002867986b3fdc187",}
+              :{
                 appId: "0x081d495d9a48438002867986b3fdc187",
                 vault:{impersonate:["0xbaf502f416aeed726883832b76322001034aad92"]}
-              }:
-              {appId: "0x081d495d9a48438002867986b3fdc187",}
+              }
+              
             }
             auths={AUTHS}
             claims={
-              // CLAIMS
               [
-                { groupId: comethGroupId ,
+                { groupId: sismoGroupId ,
                 claimType: ClaimType.EQ,
                 value: 1,},
               ]
@@ -62,10 +63,11 @@ const SismoConnectFunction: FC<SismoConnectFunctionProps> = ({ comethGroupId,com
             signature={SIGNATURE_REQUEST}
             text="Prove With Sismo"
             onResponse={async (response: SismoConnectResponse) => {
+
               setSismoConnectResponse(response);
               setPageState("verifying");
               setsismoVerfied("verifying");
-              console.log("groupId", comethGroupId)
+              console.log("groupId", sismoGroupId)
               const verifiedResult = await fetch(apiString, {
                 method: "POST",
                 body: JSON.stringify(response),
@@ -79,6 +81,9 @@ const SismoConnectFunction: FC<SismoConnectFunctionProps> = ({ comethGroupId,com
                 setSismoConnectVerifiedResult(data);
                 setPageState("verified");
                 setsismoVerfied("verified");
+                if(comethWallet=="null"){
+                  window.localStorage.setItem("comethConnected","false")
+                }
               } else {
                 setPageState("error");
                 setsismoVerfied("error");

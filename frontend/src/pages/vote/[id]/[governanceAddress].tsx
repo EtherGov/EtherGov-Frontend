@@ -4,7 +4,7 @@ import { Progress } from "@chakra-ui/react";
 import ConnectComethWallet from "@/components/Cometh/comethConnectWallet";
 import SismoConnectFunction from "@/components/Sismo/SismoConnect";
 import { useWalletAuth } from "@/components/Cometh/comethWalletAuth";
-import ComethGaslessTransaction from "@/components/Cometh/comethGaslessFunction";
+import ComethGaslessTransaction, { ComethGaslessFunction } from "@/components/Cometh/comethGaslessFunction";
 import {
   ComethApproveFunction,
 } from "@/components/Cometh/comethApprove";
@@ -64,7 +64,10 @@ const ProposalZoom: FC = () => {
 
   const [tokenId, setTokenId] = useState<number>(0);
 
-    const[groupId, setGroupId] = useState<string>("")
+  const[groupId, setGroupId] = useState<string>("")
+
+  const [isClient, setIsClient] = useState(false);
+
 
   useEffect(() => {
     setLoggedInAddress(address || null);
@@ -75,15 +78,35 @@ const ProposalZoom: FC = () => {
   //   console.log("login add", selectedProposal.groupid);
   // }, []);
 
+  async function fetchTokenId() {
+    console.log("loggedInAddress",loggedInAddress)
+    console.log("nft address",selectedProposal.nftAddress)
+    tokenId ==await getAllNFts(loggedInAddress, String(selectedProposal.nftAddress))
+    setTokenId(await getAllNFts(loggedInAddress, String(selectedProposal.nftAddress)));
+    return tokenId
+  }
+
+  // when in the page check if comethconnected exist == done, if done remove it //show
+  // create and set cometh connected to logged in and auto connect cometh //show
+  // when clicking approve, set comethConnected to done
+
   useEffect(() => {
-    async function fetchTokenId() {
-      console.log("loggedInAddress",loggedInAddress)
-        const id = await getAllNFts(loggedInAddress, String(selectedProposal.nftAddress));
-        setTokenId(id);
-    }
+    // ComethGaslessFunction(String(newGovernanceAddress))
+    setIsClient(true);
+  
     fetchTokenId();
-    // setGroupId(String(selectedProposal.groupId))
-    // console.log("groupID", groupId)
+
+    localStorage.removeItem('comethConnected');
+
+    if(window.localStorage.getItem("comethConnected") == "done"){
+      localStorage.removeItem('comethConnected');
+    }
+    if(window.localStorage.getItem("comethConnected")=="true"){
+      // console.log("comethConnected")
+      localStorage.removeItem('comethConnected');
+
+      connect()
+    }
   }, []);
 
   useEffect(() => {
@@ -97,7 +120,6 @@ const ProposalZoom: FC = () => {
 
   useEffect(() => {
     const { id, governanceAddress } = router.query;
-    // console.log("id tolol", id);
     setNewId(id as string);
     setNewGovernanceAddress(governanceAddress as `0x${string}`);
   }, [router.query]);
@@ -136,6 +158,9 @@ const ProposalZoom: FC = () => {
     console.log("groupID", groupId)
 
   })
+  //make function to check cometh wallet address in local storage.
+
+  
 
   return (
     <div className="h-full">
@@ -208,8 +233,9 @@ const ProposalZoom: FC = () => {
             Weight: 100 $APE
           </h1> */}
           <br></br>
-
-          <ConnectComethWallet
+          {isClient && window.localStorage.getItem("comethConnected")=="false"?(
+          <></>
+          ):(            <ConnectComethWallet
             isConnected={isConnected}
             isConnecting={isComethConnecting}
             connect={connect}
@@ -217,24 +243,29 @@ const ProposalZoom: FC = () => {
             wallet={wallet}
             walletAddress={walletAddress}
             setLoggedInAddress={setLoggedInAddress}
-            />
+          />)}
+
 
           <br />
 
           {/* <ComethApprove/> */}
           {/* <ComethGaslessTransaction/> */}
           {
-            groupId && loggedInAddress ? <SismoConnectFunction 
-            comethGroupId= {groupId}
+            groupId && loggedInAddress? <SismoConnectFunction 
+            sismoGroupId= {groupId}
             setsismoVerfied={setsismoVerfied}
-            comethWallet={isConnected==true ? loggedInAddress as string :"null"}
-            //loggedInAddress
+            comethWallet={isConnected==true 
+              // && loggedInAddress==window.localStorage.getItem("walletAddress")
+              ? 
+              window.localStorage.getItem("walletAddress") as string : "null" }
           /> : <></>
           }
 
-          
           {sismoVerfied == "verified" ? (
-            isConnected == true ? (
+            loggedInAddress
+             &&  tokenId 
+             &&  window.localStorage.getItem("comethConnected")=="true" 
+             ?(
               <Button
                 bg="black"
                 color="white"
@@ -245,11 +276,13 @@ const ProposalZoom: FC = () => {
                 Approve Proposal with Cometh
               </Button>
             ) : (
+              // tokenId? (
               <ApproveMetamask 
                   proposalId={Number(selectedProposal.id)}  
                   tokenId={tokenId}
                   deployedContractAddress={selectedProposal.nftAddress}
               />
+              // ):(<></>)
             )
           ) : (
             <></>

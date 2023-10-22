@@ -28,6 +28,7 @@ export async function ComethApproveFunction(proposalId: any, tokenId: any, deplo
         console.log("tx", tx)
         const txResponse = await tx.wait();
         console.log("txResponse", txResponse);
+        window.localStorage.setItem("comethConnected", "done");
 
     } catch (error) {
         console.error("Transaction failed:", error);

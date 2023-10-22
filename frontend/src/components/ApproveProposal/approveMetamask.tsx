@@ -53,14 +53,23 @@ const ApproveMetamask: React.FC<ApproveMetamaskProps> = ({ proposalId, tokenId, 
         abi: Governance.abi,
         functionName: 'stakeAndVote',
     })
-     
+
+
+
+    function CallContract() {
+        if(window.localStorage.getItem("comethConnected")){
+            localStorage.removeItem('comethConnected');
+        }
+        write({args: [proposalId,tokenId],})
+    }
+
     return (
         <Button
             bg="black"
             color="white"
             _hover={{ opacity: 0.7 }}
             className="w-1/2 mx-auto my-8 items-center text-center justify-center"
-            onClick={() => write({args: [proposalId,tokenId],})}
+            onClick={() => CallContract()}
         >
             Approve Proposal with MetaMask
         </Button>
