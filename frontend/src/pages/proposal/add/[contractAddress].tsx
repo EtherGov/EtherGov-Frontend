@@ -205,7 +205,7 @@ function AddProposalTransaction() {
 
           <div className="flex justify-between my-5">
             <h2 className="w-[150px] text-lg text-left font-semibold mr-4 mt-1">
-              Vault Address
+              Vault Module Address
             </h2>
 
             <div className="w-[690px]">
@@ -216,8 +216,8 @@ function AddProposalTransaction() {
                 {vault ? (
                   vault.map((item, key) => {
                     return (
-                      <option key={key} value={item.wallet_address}>
-                        {item.wallet_address} (Chain ID: {item.chain_id})
+                      <option key={key} value={item.module_address}>
+                        {item.module_address} (Chain ID: {item.chain_id})
                       </option>
                     );
                   })
