@@ -185,57 +185,73 @@ function AddProposalTransaction() {
   const filterTemplate = (templateName: string) => {
     if (templateName === "Spark Protocol") {
       return (
-        <div>
-          <h1>Spark Protocol</h1>
-          <div className="flex">
-            <h2 className="text-lg text-left font-semibold mr-4 mt-1">
+        <div className="w-full p-2">
+          <h1 className=" text-2xl font-bold">Spark Protocol</h1>
+          <br />
+
+          <div className="flex justify-between my-5">
+            <h2 className="w-[180px] text-lg text-left font-semibold mr-4 mt-1">
               Type of transaction
             </h2>
-            <Select
-              placeholder="Select transaction type"
-              onChange={(e) => setTransactionType(e.target.value)}
-            >
-              <option value="TRANSFER">TRANSFER</option>
-            </Select>
+            <div className=" w-[690px]">
+              <Select
+                placeholder="Select transaction type"
+                onChange={(e) => setTransactionType(e.target.value)}
+              >
+                <option value="TRANSFER">TRANSFER</option>
+              </Select>
+            </div>
           </div>
-          <div className="flex">
-            <h2 className="text-lg text-left font-semibold mr-4 mt-1">
+
+          <div className="flex justify-between my-5">
+            <h2 className="w-[150px] text-lg text-left font-semibold mr-4 mt-1">
               Vault Address
             </h2>
-            <Select
-              placeholder="Select vault"
-              onChange={(e) => setSelectedVault(e.target.value)}
-            >
-              {vault ? (
-                vault.map((item, key) => {
-                  return (
-                    <option key={key} value={item.wallet_address}>
-                      {item.wallet_address} (Chain ID: {item.chain_id})
-                    </option>
-                  );
-                })
-              ) : (
-                <></>
-              )}
-            </Select>
+
+            <div className="w-[690px]">
+              <Select
+                placeholder="Select vault"
+                onChange={(e) => setSelectedVault(e.target.value)}
+              >
+                {vault ? (
+                  vault.map((item, key) => {
+                    return (
+                      <option key={key} value={item.wallet_address}>
+                        {item.wallet_address} (Chain ID: {item.chain_id})
+                      </option>
+                    );
+                  })
+                ) : (
+                  <></>
+                )}
+              </Select>
+            </div>
           </div>
-          <div className="flex">
-            <h2 className="text-lg text-left font-semibold mr-4 mt-1">
+
+          <div className="flex justify-between my-5">
+            <h2 className="w-[150px] text-lg text-left font-semibold mr-4 mt-1">
               Send to
             </h2>
-            <Input
-              placeholder="Address"
-              onChange={(e) => setDestinationAddress(e.target.value)}
-            />
+            <div className="w-[690px]">
+              <Input
+                placeholder="Address"
+                onChange={(e) => setDestinationAddress(e.target.value)}
+              />
+            </div>
           </div>
-          <div className="flex">
-            <h2 className="text-lg text-left font-semibold mr-4 mt-1">Value</h2>
-            <Input
-              type="number"
-              onChange={(e) => {
-                setTokenValue(Number(e.target.value));
-              }}
-            />
+
+          <div className="flex justify-between my-5 ">
+            <h2 className="w-[150px] text-lg text-left font-semibold mr-4 mt-1">
+              Value
+            </h2>
+            <div className="w-[690px]">
+              <Input
+                type="number"
+                onChange={(e) => {
+                  setTokenValue(Number(e.target.value));
+                }}
+              />
+            </div>
           </div>
         </div>
       );
@@ -317,16 +333,18 @@ function AddProposalTransaction() {
               </Select>
             </div>
           </div>
-          <div className="flex flex-row w-full my-1">
+
+          <div className="flex w-full border-2 my-1 rounded-xl">
             {template ? filterTemplate(template) : <></>}
           </div>
+
           <div className="flex flex-row w-full my-1">
             <div className="w-1/4 p-2 bg-transparent">
               <h1 className="text-lg text-left font-semibold mr-4 mt-1">
                 Payload:
               </h1>
             </div>
-            <div className="w-8/12 p-2 bg-transparent">
+            <div className="w-3/4 p-2 bg-transparent">
               <Textarea
                 className="text-sm font-medium text-right"
                 rows={4}
