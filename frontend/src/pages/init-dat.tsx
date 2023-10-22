@@ -126,7 +126,7 @@ export default function InitDat() {
 
   return (
     <div className="flex justify-center">
-      <div className="mt-[30px] w-[900px] rounded-3xl  bg-gradient-to-r from-rose-100 to-teal-100">
+      <div className="mt-[30px] w-[900px] rounded-3xl bg-white">
         <div className="flex flex-col px-[100px]">
           {/* INPUT */}
           <div>
@@ -171,7 +171,9 @@ export default function InitDat() {
                       onChange={(event) => handleInputChange(index, event)}
                     />
                     <Button
-                      className=" ml-5"
+                      bg="black"
+                      color="white"
+                      className="ml-5"
                       onClick={() => removeCouncil(index)}
                     >
                       Remove
@@ -180,11 +182,11 @@ export default function InitDat() {
                 </div>
               ))}
               <div className=" my-[30px]">
-                <Button onClick={handleAddAddress}>Add Council Address</Button>
+                <Button bg="black" color="white" onClick={handleAddAddress}>Add Council Address</Button>
               </div>
             </div>
             <div className="my-[10px]">
-              <Button onClick={handleDeploy}>Deploy Governance</Button>
+              <Button bg="black" color="white" onClick={handleDeploy}>Deploy Governance</Button>
             </div>
           </div>
 

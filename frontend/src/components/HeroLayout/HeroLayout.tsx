@@ -45,7 +45,7 @@ const HeroLayout = () => {
   };
 
   return (
-    <div className="h-screen flex flex-col items-center bg-gradient-to-r from-rose-200 to-teal-200">
+    <div className="h-screen flex flex-col items-center bg-white">
       <Image
         className="mx-auto pt-16"
         src={logo}
@@ -58,24 +58,24 @@ const HeroLayout = () => {
           EtherGov
         </Text>
         <Text fontSize="2xl" className="font-semibold text-gray-500">
-          Create, Manage, and Govern Decentralized Autonomous Treasury (DAT)
+          Create, Manage, and Govern Decentralized Autonomous Organizations (DAOs)
           Accounts
         </Text>
       </div>
       <div className="space-y-4">
         <button
-          className="w-full py-4 px-32 border-4 border-slate-300 bg-transparent text-xl text-gray-500 font-semibold rounded-lg shadow-md hover:bg-teal-50 flex items-center justify-center"
+          className="w-full py-4 px-32 border-4 border-slate-200 bg-black text-xl text-white font-semibold rounded-lg shadow-md hover:opacity-70 flex items-center justify-center"
           onClick={handleCreateRoute}
         >
           <FaPlus className="mr-4" />
-          <span>Create New DATs</span>
+          <span>Create New DAOs</span>
         </button>
         <button
-          className="w-full py-4 px-32 border-4 border-slate-300 bg-transparent text-xl text-gray-500 font-semibold rounded-lg shadow-md hover:bg-teal-50 flex items-center justify-center"
+          className="w-full py-4 px-32 border-4 border-slate-200 bg-black text-xl text-white font-semibold rounded-lg shadow-md hover:opacity-70 flex items-center justify-center"
           onClick={handleBrowseRoute}
         >
           <FaSearch className="mr-4" />
-          <span>Browse DATs</span>
+          <span>Browse DAos</span>
         </button>
       </div>
 
