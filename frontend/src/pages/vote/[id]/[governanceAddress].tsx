@@ -103,7 +103,9 @@ const ProposalZoom: FC = () => {
   // when clicking approve, set comethConnected to done
 
   useEffect(() => {
+
     ComethGaslessFunction(String(newGovernanceAddress));
+
     setIsClient(true);
 
     fetchTokenId();
@@ -111,12 +113,8 @@ const ProposalZoom: FC = () => {
     // localStorage.removeItem('comethConnected');
 
     if (window.localStorage.getItem("comethConnected") == "done") {
-      localStorage.removeItem("comethConnected");
+      window.localStorage.removeItem("comethConnected");
     }
-    console.log(
-      "comethConnected",
-      window.localStorage.getItem("comethConnected") == "true"
-    );
 
     if (window.localStorage.getItem("comethConnected") == "true") {
       console.log(
@@ -168,6 +166,20 @@ const ProposalZoom: FC = () => {
   }, [data1, newId]); //
 
   useEffect(() => {
+    // ComethGaslessFunction(String(newGovernanceAddress));
+
+    // if (window.localStorage.getItem("comethConnected") == "done") {
+    //   window.localStorage.removeItem("comethConnected");
+    // }
+
+    // if (window.localStorage.getItem("comethConnected") == "true") {
+    //   console.log(
+    //     "comethConnected",
+    //     window.localStorage.getItem("comethConnected")
+    //   );
+    //   connect();
+    // }
+
     if (!selectedProposal) {
       console.error("Cannot fetch token ID because selectedProposal is null.");
       return; // Just return instead of throwing an error
