@@ -1,5 +1,5 @@
 import { Button, Card, Divider, Textarea } from "@chakra-ui/react";
-import { useState, FC } from "react";
+import { useState, FC, use, useEffect } from "react";
 import { Progress } from "@chakra-ui/react";
 import ConnectComethWallet from "@/components/Cometh/comethConnectWallet";
 import SismoConnectFunction from "@/components/Sismo/SismoConnect";
@@ -9,6 +9,8 @@ import {
   ComethApprove,
   ComethApproveFunction,
 } from "@/components/Cometh/comethApprove";
+import getAllNFts, { ApproveMetamask } from "@/components/ApproveProposal/approveMetamask";
+import { useAccount } from "wagmi";
 
 //Sismo Group ID
 
@@ -28,14 +30,27 @@ const ProposalZoom: FC = () => {
   const [proposalDesc, setProposalDesc] = useState(
     "BAYC's DAT is capitalized with an initial 100k DAI. In this case, depositing this 100k for sDAI in order to earn 5% yield is a risk-free action."
   );
-
+  
+  const { address, isConnecting, isDisconnected } = useAccount()
+  
   const [dateEnacted, setDateEnacted] = useState("20/10/2023");
 
   const [dayPeriod, setDayPeriod] = useState("3 Days");
 
   const [sismoVerfied, setsismoVerfied] = useState<string>("init");
 
-  const [comethLoggedIn, setComethLoggedIn] = useState(false);
+  const [loggedInAddress, setLoggedInAddress] = useState<string | null>(null);
+
+  useEffect(() => {
+    setLoggedInAddress(address || null);
+
+  }, [address]);
+  // console.log(loggedInAddress)
+
+  useEffect(() => {
+    console.log("login add", loggedInAddress);
+  }, [loggedInAddress]);
+
 
   return (
     <div className="h-full">
@@ -98,40 +113,55 @@ const ProposalZoom: FC = () => {
             connectionError={connectionError}
             wallet={wallet}
             walletAddress={walletAddress}
-            // setComethLoggedIn={setComethLoggedIn}
+            setLoggedInAddress={setLoggedInAddress}
+            />
+
+          {/* <ComethGaslessTransaction/> */}
+          <Button
+                bg="black"
+                color="white"
+                _hover={{ opacity: 0.7 }}
+                className="w-1/2 mx-auto my-8 items-center text-center justify-center"
+                // onClick={()=>NFTFetcher()
+                //   ("0x547F61FC3B2AC2B21518d660dE20398776d7C755", "0xC9Fd509E7969DE8Dbc1b5BfBdFc1418d90C27a3b")}
+                onClick={getAllNFts}
+              >
+                get nfts
+            </Button>
+
+              
+          <SismoConnectFunction 
+            comethGroupId="0xc505a8125fc571896eecdadb908e7706"
+            setsismoVerfied={setsismoVerfied}
           />
 
-          <br />
-
-          {/* <ComethApprove/> */}
-          {/* <ComethGaslessTransaction/> */}
-
-          <SismoConnectFunction setsismoVerfied={setsismoVerfied} />
-
-          {sismoVerfied == "verified" ? (
+          {/* {sismoVerfied == "verified" ? (
             isConnected == true ? (
               <Button
                 bg="black"
                 color="white"
                 _hover={{ opacity: 0.7 }}
                 className="w-1/2 mx-auto my-8 items-center text-center justify-center"
-                onClick={() => ComethApproveFunction()}
+                onClick={() => ComethApproveFunction(1,2)} // proposal id and token id
               >
                 Approve Proposal with Cometh
               </Button>
             ) : (
-              <Button
-                bg="black"
-                color="white"
-                _hover={{ opacity: 0.7 }}
-                className="w-1/2 mx-auto my-8 items-center text-center justify-center"
-              >
-                Approve Proposal with MetaMask
-              </Button>
+              // <Button
+              //   bg="black"
+              //   color="white"
+              //   _hover={{ opacity: 0.7 }}
+              //   className="w-1/2 mx-auto my-8 items-center text-center justify-center"
+              // >
+              //   Approve Proposal with MetaMask
+              // </Button>
+              <>
+                <ApproveMetamask/>
+              </>
             )
           ) : (
             <></>
-          )}
+          )} */}
           {/* enable cometh wallet when sismoVerfied state is "verified" */}
         </Card>
       </div>

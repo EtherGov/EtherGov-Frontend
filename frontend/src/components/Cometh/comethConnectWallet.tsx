@@ -11,16 +11,18 @@ interface ConnectWalletProps {
   connect: () => Promise<void>;
   wallet: ComethWallet | null;
   walletAddress: string | null;
+  setLoggedInAddress: (address: string | null) => void;
 }
 
-function ConnectComethWallet({
+const ConnectComethWallet: React.FC<ConnectWalletProps> = ({
   connectionError,
   isConnecting,
   isConnected,
   connect,
   wallet,
   walletAddress,
-}: ConnectWalletProps): JSX.Element {
+  setLoggedInAddress
+}) => {
   useEffect(() => {
     console.log("Wallet changed: ", wallet);
   }, [wallet]);
@@ -29,6 +31,7 @@ function ConnectComethWallet({
     console.log("cometh wallet", wallet);
     // console.log("cometh walletAddress", walletAddress)
     if (isConnected) {
+      setLoggedInAddress(walletAddress)
       return (
         // setComethLoggedIn(true),
         <>

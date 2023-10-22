@@ -7,25 +7,33 @@ import {
 import {
   CONFIG,
   AUTHS,
-  CLAIMS,
   SIGNATURE_REQUEST,
   AuthType,
   ClaimType,
 } from "../../shared/sismo";
+import { group } from "console";
 
 interface SismoConnectFunctionProps {
+  comethGroupId: string; // New parameter
+  comethWallet:string;
   setsismoVerfied: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const SismoConnectFunction: FC<SismoConnectFunctionProps> = ({
-  setsismoVerfied,
-}) => {
+const SismoConnectFunction: FC<SismoConnectFunctionProps> = ({ comethGroupId,comethWallet, setsismoVerfied }) => {
   const [sismoConnectVerifiedResult, setSismoConnectVerifiedResult] =
     useState<SismoConnectVerifiedResult>();
   const [sismoConnectResponse, setSismoConnectResponse] =
     useState<SismoConnectResponse>();
   const [pageState, setPageState] = useState<string>("init");
   const [error, setError] = useState<string>("");
+  console.log("groupId di sismo function", comethGroupId)
+  
+  
+  const apiString='/api/verify/route?comethGroupId='+ comethGroupId+"&comethWallet="+comethWallet
+
+  console.log("apiString", apiString) 
+  console.log("comethWallet", comethWallet) 
+  console.log("comethGroupId", comethGroupId)
 
   return (
     <>
@@ -34,23 +42,38 @@ const SismoConnectFunction: FC<SismoConnectFunctionProps> = ({
       {pageState == "init" ? (
         <>
           <SismoConnectButton
-            config={CONFIG}
+            config={comethWallet!=="null"?
+              // CONFIG
+              {
+                appId: "0x081d495d9a48438002867986b3fdc187",
+                vault:{impersonate:["0xbaf502f416aeed726883832b76322001034aad92"]}
+              }:
+              {appId: "0x081d495d9a48438002867986b3fdc187",}
+            }
             auths={AUTHS}
-            claims={CLAIMS}
+            claims={
+              // CLAIMS
+              [
+                { groupId: comethGroupId ,
+                claimType: ClaimType.EQ,
+                value: 1,},
+              ]
+            }
             signature={SIGNATURE_REQUEST}
             text="Prove With Sismo"
             onResponse={async (response: SismoConnectResponse) => {
               setSismoConnectResponse(response);
               setPageState("verifying");
               setsismoVerfied("verifying");
-              const verifiedResult = await fetch("/api/verify/route", {
+              console.log("groupId", comethGroupId)
+              const verifiedResult = await fetch(apiString, {
                 method: "POST",
                 body: JSON.stringify(response),
               });
               console.log(response);
 
               const data = await verifiedResult.json();
-              console.log(data);
+              console.log("ini verified result",data);
 
               if (verifiedResult.ok) {
                 setSismoConnectVerifiedResult(data);

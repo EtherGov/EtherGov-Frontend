@@ -2,21 +2,29 @@ import { ComethProvider } from "@cometh/connect-sdk";
 import { comethWallet } from '@/shared/cometh';
 import { ethers } from 'ethers';
 // import registryabi from "../../../registryabi.json";
+import Governance from "../../../public/Governance.json"
 
-export async function ComethApproveFunction() {
+        //     uint256 proposalId,
+        //     uint256 tokenId
+        
+export async function ComethApproveFunction(proposalId: any, tokenId: any, deployedContractAddress: any) {
     const provider = new ComethProvider(comethWallet)
 
     console.log("provider", provider.getSigner())
 
     const nftContract = new ethers.Contract(
-        "0x83E6A1A9f3A0bBF368Bb997A66010DDc79ffa779",//deployed address
-        registryabi,//registry
+        deployedContractAddress,//deployedContractAddress
+        Governance.abi,//registry
         provider.getSigner()
     )
     console.log("call contract")
     try {
         console.log("step 1")
-        const tx = await nftContract.updateOwner(1, "0x1A10A9331F011D44eF360A3D416Ea8763e95F2C8");
+        // function stakeAndVote(
+        //     uint256 proposalId,
+        //     uint256 tokenId
+        // )
+        const tx = await nftContract.stakeAndVote(proposalId, tokenId);
         console.log("tx", tx)
         const txResponse = await tx.wait();
         console.log("txResponse", txResponse);
@@ -26,10 +34,10 @@ export async function ComethApproveFunction() {
     }
 }
 
-export function ComethApprove() {
-    return(
-        <div>
-            <button onClick={ComethApproveFunction}>Register DNS</button>
-        </div>
-    )
-}
+// export function ComethApprove() {
+//     return(
+//         <div>
+//             <button onClick={ComethApproveFunction}>Register DNS</button>
+//         </div>
+//     )
+// }
