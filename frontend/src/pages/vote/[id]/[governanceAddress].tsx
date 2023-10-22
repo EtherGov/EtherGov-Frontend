@@ -29,6 +29,7 @@ interface Proposal {
   tokenAddressSource: string;
   votes: bigint;
   votesNeeded: bigint;
+  endDate: any;
 }
 
 //Sismo Group ID
@@ -103,7 +104,6 @@ const ProposalZoom: FC = () => {
   // when clicking approve, set comethConnected to done
 
   useEffect(() => {
-
     ComethGaslessFunction(String(newGovernanceAddress));
 
     setIsClient(true);
@@ -205,23 +205,30 @@ const ProposalZoom: FC = () => {
                 {selectedProposal.description}
               </h1>
               <Divider colorScheme="gray" className="my-4" />
-              <h1 className="text-xl font-semibold text-left justify-center mt-2">
+              <h1 className="text-md font-medium text-left justify-center mt-2">
                 Group ID: {selectedProposal.groupId}
               </h1>
 
-              <h1 className="text-xl font-semibold text-left justify-center mt-4">
-                Proposal Details:
-              </h1>
               <br />
 
               <div className="flex flex-row mt-2 mb-8">
-                <h1 className="text-md font-medium text-left justify-center">
-                  Voting Period:
-                </h1>
-                <h1 className="text-md font-medium text-left justify-center ml-4">
-                  {Number(selectedProposal.duration)}
+                <h1 className="text-md font-medium ">
+                  Expired:{" "}
+                  {new Date(
+                    Number(selectedProposal.endDate) * 1000
+                  ).toDateString()}{" "}
+                  {new Date(
+                    Number(selectedProposal.endDate) * 1000
+                  ).toLocaleTimeString()}
                 </h1>
               </div>
+
+              <div className="flex flex-row mt-2 mb-8">
+                <h1 className="text-md font-medium ">
+                  Chain Id: {selectedProposal.targetChain}
+                </h1>
+              </div>
+
               <div className="flex flex-row mt-2 mb-8">
                 <h1 className="text-md font-medium text-left justify-center">
                   Voted:
