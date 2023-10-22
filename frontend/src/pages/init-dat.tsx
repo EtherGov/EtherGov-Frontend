@@ -29,7 +29,7 @@ export default function InitDat() {
     address: factoryAddress as `0x${string}`,
     abi: GovernanceFactory.abi,
     functionName: "createGovernance",
-    args: [name, mailboxAddress, gasPayMaster, councilAddresses, erc20],
+    args: [name, mailboxAddress, gasPayMaster, councilAddresses],
   });
 
   const { data, isLoading, isSuccess, write } = useContractWrite(config);
