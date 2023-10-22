@@ -125,9 +125,9 @@ export default function InitDat() {
   }, []);
 
   return (
-    <div className="flex justify-center">
-      <div className="mt-[30px] w-[900px] rounded-3xl  bg-gradient-to-r from-rose-100 to-teal-100">
-        <div className="flex flex-col px-[100px]">
+    <div className="flex justify-center bg-gradient-to-r from-rose-200 to-teal-200 min-h-screen">
+      <div className="mt-[30px] w-[900px]">
+        <div className="flex flex-col px-[100px] rounded-2xl border-2 bg-white">
           {/* INPUT */}
           <div>
             <h1 className=" mt-5 text-4xl font-extrabold">Initialize DAT</h1>
@@ -135,7 +135,7 @@ export default function InitDat() {
             <br />
 
             <div className="flex items-center gap-4">
-              <h2 className=" text-xl font-medium">DAO Name</h2>
+              <h2 className=" text-xl font-medium w-32">DAO Name</h2>
               <input
                 className="w-[585px] py-2 px-4 border-2 border-black bg-transparent focus:outline-none focus:border-gray-400 rounded-xl"
                 onChange={(e) => {
@@ -145,7 +145,7 @@ export default function InitDat() {
             </div>
             <br />
 
-            <div>
+            {/* <div>
               <h2 className=" text-xl font-medium">IERC20 Token Address</h2>
               <input
                 className="w-[700px] py-2 px-4 border-2 border-black bg-transparent focus:outline-none focus:border-gray-400 rounded-xl"
@@ -153,7 +153,7 @@ export default function InitDat() {
                   setErc20(e.target.value);
                 }}
               />
-            </div>
+            </div> */}
 
             <div>
               {councilAddresses.map((address, index) => (
@@ -188,12 +188,13 @@ export default function InitDat() {
             </div>
           </div>
 
+
           {/* RENDER GOVERNANCE ADDRESS */}
           <div>
             {isLoading ? (
-              <p>Loading...</p>
+              <p className="border-2 m-5 p-3 text-center rounded-2xl bg-teal-500">Loading...</p>
             ) : isSuccess && !governanceAddress ? (
-              <p>
+              <p className="border-2 m-5 p-3 text-center rounded-2xl bg-amber-300">
                 Waiting for Governance Address{" "}
                 <span>
                   <CircularProgress
@@ -204,7 +205,7 @@ export default function InitDat() {
                 </span>
               </p>
             ) : governanceAddress ? (
-              <p>{governanceAddress}</p>
+              <p className="border-2 m-5 p-3 text-center rounded-2xl bg-lime-400">Governance Address: {governanceAddress}</p>
             ) : (
               <p></p>
             )}
@@ -215,9 +216,9 @@ export default function InitDat() {
             {governanceAddress ? (
               <div>
                 {gasTank ? (
-                  <p>{gasTank}</p>
+                  <p className="border-2 m-5 p-3 text-center rounded-2xl bg-lime-400">Gas Tank Address{gasTank}</p>
                 ) : (
-                  <p>
+                  <p className="border-2 m-5 p-3 text-center rounded-2xl bg-amber-300">
                     Waiting for Gas Tank Address{" "}
                     <span>
                       <CircularProgress

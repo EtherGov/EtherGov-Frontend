@@ -164,10 +164,10 @@ const ProposalZoom: FC = () => {
   
 
   return (
-    <div className="h-full">
+    <div className="bg-gradient-to-r from-rose-200 to-teal-200 min-h-screen">
       {/* <button onClick={handleClick}>click</button> */}
-      <div className="mt-8 w-2/3 mx-auto">
-        <Card className="my-8 p-8 mx-auto justify-center">
+      <div className=" pt-12 w-2/3 mx-auto">
+        <Card className="p-8 mx-auto justify-center">
           <h1 className="text-3xl font-semibold text-left justify-center">
             {selectedProposal.description}
           </h1>

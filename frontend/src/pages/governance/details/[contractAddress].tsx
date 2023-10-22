@@ -107,9 +107,10 @@ function GovernanceDetail() {
   };
 
   return (
-    <div>
+    <div className="bg-gradient-to-r from-rose-200 to-teal-200 min-h-screen">
+
       <div className="flex justify-center">
-        <div className="mt-10 p-10 w-[1000px] border-solid border-4">
+        <div className="mt-10 p-10 w-[1000px] border-solid border-4 bg-white rounded-3xl ">
           <h1 className="text-[30px]">Governance Detail</h1>
           <hr className="mb-6 border-t-4  border-gray-400 w-full" />
           <p>List of Councils</p>
@@ -180,12 +181,12 @@ function GovernanceDetail() {
 
             <TabPanels>
               <TabPanel>
-                <h1>Active Proposals</h1>
+                <h1 className=" text-xl font-bold mt-3">Active Proposals</h1>
                 <div>
                   {activeProposals ? (
                     activeProposals.map((item, key) => {
                       return (
-                        <Card key={key}>
+                        <Card className="my-10" key={key}>
                           <CardHeader>
                             <Heading>{item.description}</Heading>
                           </CardHeader>
@@ -216,13 +217,18 @@ function GovernanceDetail() {
                                   Value: {Number(item.sourceValue)}
                                 </Text>
                               </Box>
-                              <div className="flex items-center justify-center">
-                                <button
-                                  onClick={() => handleNavigate(item.id)}
-                                  className="w-96 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                                >
-                                  Vote
-                                </button>
+                              <div>
+                                {!isCouncilMember() && ( // If the user is NOT a council member, show the button
+                                  <div className="flex items-center justify-center">
+                                    <button
+                                      onClick={() => handleNavigate(item.id)}
+                                      className="w-96 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                                    >
+                                      Vote
+                                    </button>
+                                  </div>
+                                )}
+                                {/* If the user is a council member, we display nothing as per requirement */}
                               </div>
                             </Stack>
                           </CardBody>
@@ -236,12 +242,12 @@ function GovernanceDetail() {
               </TabPanel>
 
               <TabPanel>
-                <h1>Passed Proposals</h1>
+                <h1  className=" text-xl font-bold mt-3">Passed Proposals</h1>
                 <div>
                   {passedProposals ? (
                     passedProposals.map((item, key) => {
                       return (
-                        <Card key={key}>
+                        <Card className="my-10" key={key}>
                           <CardHeader>
                             <Heading>{item.description}</Heading>
                           </CardHeader>
@@ -284,12 +290,12 @@ function GovernanceDetail() {
               </TabPanel>
 
               <TabPanel>
-                <h1>Failed Proposals</h1>
+                <h1  className=" text-xl font-bold mt-3">Failed Proposals</h1>
                 <div>
                   {failedProposals ? (
                     failedProposals.map((item, key) => {
                       return (
-                        <Card key={key}>
+                        <Card className="my-10" key={key}>
                           <CardHeader>
                             <Heading>{item.description}</Heading>
                           </CardHeader>
@@ -320,7 +326,7 @@ function GovernanceDetail() {
                                   Value: {Number(item.sourceValue)}
                                 </Text>
                                 <Text pt="2" fontSize="sm">
-                                  Value:{" "}
+                                  Expired:{" "}
                                   {new Date(
                                     Number(item.endDate) * 1000
                                   ).toDateString()}{" "}

@@ -82,8 +82,8 @@ function ExplorePage() {
   };
 
   return (
-    <div>
-      <div className="w-full mt-4 flex items-center justify-center">
+    <div className="h-screen bg-gradient-to-r from-rose-200 to-teal-200">
+      <div className="w-full flex items-center justify-center">
         <input
           type="search"
           placeholder="Browse DATs..."
