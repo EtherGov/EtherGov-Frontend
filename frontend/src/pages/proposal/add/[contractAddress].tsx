@@ -1,4 +1,6 @@
-import DropdownButtonProfile from "@/components/Button/DropdownButtonProposal";
+import "react-datetime-picker/dist/DateTimePicker.css";
+import "react-calendar/dist/Calendar.css";
+import "react-clock/dist/Clock.css";
 import {
   Button,
   Card,
@@ -16,6 +18,11 @@ import { ethers } from "ethers";
 import { useContractWrite, usePrepareContractWrite } from "wagmi";
 import Governance from "../../../../public/Governance.json";
 import { ProposalInput } from "@/utils/interface";
+import DateTimePicker from "react-datetime-picker";
+
+type ValuePiece = Date | null;
+
+type Value = ValuePiece | [ValuePiece, ValuePiece];
 
 function AddProposalTransaction() {
   const [contract, setContract] = useState<string>("");
@@ -32,23 +39,25 @@ function AddProposalTransaction() {
   const [duration, setDuration] = useState<number>(0); // [
   const [nftAddress, setNftAddress] = useState<string>("");
   const [proposalInput, setProposalInput] = useState<ProposalInput>({
-    description: "test data",
-    targetChain: 5001,
-    targetAddress: "0x64A2C48D18C03AcC799863A5DA2992cb68D2B813",
-    tokenAddressSource: "0x81cBB0aa06cB4ECeB64a1959e29509f109F58C29",
-    sourceValue: 100,
-    duration: 86400,
-    voteNeeded: 15,
-    nftAddress: "0x83df724178676b3508b0eab837c9d8847d8e0c7a",
-    groupId: "0x9bfaf997efdde9a6372fe679f177a5c1",
-    messageBody:
-      "0x000000000000000000000000000000000000000000000000000000000000138900000000000000000000000081cbb0aa06cb4eceb64a1959e29509f109f58c29000000000000000000000000000000000000000000000000000000000000006400000000000000000000000000000000000000000000000000000000000000e0000000000000000000000000000000000000000000000000000000000000014000000000000000000000000064a2c48d18c03acc799863a5da2992cb68d2b813000000000000000000000000ca51855fba4aae768dcc273349995de391731e7000000000000000000000000000000000000000000000000000000000000000277472616e7366657246726f6d28616464726573732c20616464726573732c2075696e74323536290000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000085452414e53464552000000000000000000000000000000000000000000000000",
+    description: "",
+    targetChain: 0,
+    targetAddress: "",
+    tokenAddressSource: "",
+    sourceValue: 0,
+    endDate: Math.floor(Date.now() / 1000),
+    voteNeeded: 1,
+    nftAddress: "",
+    groupId: "",
+    messageBody: "",
   }); // [
+  const [dateTime, setDateTime] = useState("");
+  const [timestamp, setTimestamp] = useState<number | null>(null);
+
   const router = useRouter();
 
   const [selectedSismoDataGroup, setSelectedSismoDataGroup] = useState("-");
 
-  const { config } = usePrepareContractWrite({
+  const { config, error } = usePrepareContractWrite({
     address: contract as `0x${string}`,
     abi: Governance.abi,
     functionName: "createProposal",
@@ -58,29 +67,43 @@ function AddProposalTransaction() {
   const { data, isLoading, isSuccess, write } = useContractWrite(config);
 
   const encodePayload = (tokenAddress: string, functionName: string) => {
-    const value = [
-      chainId,
-      tokenAddress, //token address
-      tokenValue,
-      functionName,
-      transactionType,
-      selectedVault, //mumbai
-      destinationAddress, //address of the same network
-    ];
-    console.log(value);
-    const type = [
-      "uint256",
-      "address",
-      "uint256",
-      "string",
-      "string",
-      "address",
-      "address",
-    ];
-    const encoding = ethers.utils.defaultAbiCoder.encode(type, value);
-    console.log(encoding);
-    setPayload(encoding);
-    return payload;
+    if (
+      chainId ||
+      tokenAddress ||
+      tokenValue ||
+      functionName ||
+      transactionType ||
+      selectedVault ||
+      destinationAddress
+    ) {
+      const value = [
+        chainId,
+        tokenAddress, //token address
+        tokenValue,
+        functionName,
+        transactionType,
+        selectedVault, //mumbai
+        destinationAddress, //address of the same network
+      ];
+      console.log(value);
+      const type = [
+        "uint256",
+        "address",
+        "uint256",
+        "string",
+        "string",
+        "address",
+        "address",
+      ];
+      try {
+        const encoding = ethers.utils.defaultAbiCoder.encode(type, value);
+        console.log(encoding);
+        setPayload(encoding);
+        return payload;
+      } catch (e) {
+        console.log(e);
+      }
+    }
   };
 
   useEffect(() => {
@@ -111,15 +134,28 @@ function AddProposalTransaction() {
       targetAddress: selectedVault,
       tokenAddressSource: templateData.token_address,
       sourceValue: tokenValue,
-      duration: duration,
+      endDate: timestamp as number,
       voteNeeded: Number(quorum),
       nftAddress: nftAddress,
       groupId: selectedSismoDataGroup,
-      messageBody: encoded,
+      messageBody: encoded as string,
     };
 
     console.log(proposalInput);
     setProposalInput(proposalInput);
+  };
+
+  const handleDateTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedDate = e.target.value;
+
+    if (selectedDate) {
+      // Convert the datetime-local input value to a Date object
+      const date = new Date(selectedDate);
+      const unixTimestamp = Math.floor(date.getTime() / 1000);
+      setTimestamp(unixTimestamp);
+    }
+
+    setDateTime(selectedDate);
   };
 
   const handleClick = () => {
@@ -128,6 +164,23 @@ function AddProposalTransaction() {
       write();
     }
   };
+
+  const handleChange = (date: Date | null) => {
+    if (date) {
+      console.log(date.getTime() / 1000);
+      setTimestamp(Math.floor(date.getTime() / 1000)); // Convert to Unix timestamp in seconds
+    }
+  };
+
+  useEffect(() => {
+    if (isSuccess) {
+      router.push(`/governance/details/${contract}`);
+    }
+  }, [isSuccess]);
+
+  useEffect(() => {
+    console.log(error);
+  }, [error]);
 
   const filterTemplate = (templateName: string) => {
     if (templateName === "Spark Protocol") {
@@ -312,11 +365,11 @@ function AddProposalTransaction() {
               </h1>
             </div>
             <div className="w-3/4 p-2 bg-transparent mt-3">
-              <Select onChange={(e) => setDuration(Number(e.target.value))}>
-                <option value="60">1 Minute</option>
-                <option value="86400">1 Day</option>
-                <option value="172800">2 Days</option>
-              </Select>
+              <Input
+                type="datetime-local"
+                value={dateTime}
+                onChange={handleDateTimeChange}
+              />
             </div>
           </div>
           <div className="flex flex-row w-full my-1">
