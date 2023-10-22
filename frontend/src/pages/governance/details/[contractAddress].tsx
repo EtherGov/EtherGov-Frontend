@@ -56,7 +56,6 @@ function GovernanceDetail() {
       const now = Date.now();
 
       const active = allProposals.filter((p) => Number(p.endDate));
-      console.log(Number(active[0].endDate) * 1000 > now);
 
       setActiveProposals(
         allProposals.filter(
