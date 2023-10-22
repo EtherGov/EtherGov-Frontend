@@ -188,12 +188,13 @@ export default function InitDat() {
             </div>
           </div>
 
+
           {/* RENDER GOVERNANCE ADDRESS */}
           <div>
             {isLoading ? (
               <p>Loading...</p>
             ) : isSuccess && !governanceAddress ? (
-              <p>
+              <p className="border-2 m-5 p-3 text-center rounded-2xl bg-amber-300">
                 Waiting for Governance Address{" "}
                 <span>
                   <CircularProgress
@@ -204,7 +205,7 @@ export default function InitDat() {
                 </span>
               </p>
             ) : governanceAddress ? (
-              <p>{governanceAddress}</p>
+              <p className="border-2 m-5 p-3 text-center rounded-2xl bg-lime-400">Governance Address: {governanceAddress}</p>
             ) : (
               <p></p>
             )}
@@ -215,9 +216,9 @@ export default function InitDat() {
             {governanceAddress ? (
               <div>
                 {gasTank ? (
-                  <p>{gasTank}</p>
+                  <p className="border-2 m-5 p-3 text-center rounded-2xl bg-lime-400">Gas Tank Address{gasTank}</p>
                 ) : (
-                  <p>
+                  <p className="border-2 m-5 p-3 text-center rounded-2xl bg-amber-300">
                     Waiting for Gas Tank Address{" "}
                     <span>
                       <CircularProgress
