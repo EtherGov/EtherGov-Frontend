@@ -4,14 +4,14 @@ import { Progress } from "@chakra-ui/react";
 import ConnectComethWallet from "@/components/Cometh/comethConnectWallet";
 import SismoConnectFunction from "@/components/Sismo/SismoConnect";
 import { useWalletAuth } from "@/components/Cometh/comethWalletAuth";
-import ComethGaslessTransaction, { ComethGaslessFunction } from "@/components/Cometh/comethGaslessFunction";
+import  { ComethGaslessFunction } from "@/components/Cometh/comethGaslessFunction";
 import {
   ComethApproveFunction,
 } from "@/components/Cometh/comethApprove";
 import { useAccount, useContractRead } from "wagmi";
 import { useRouter } from "next/router";
 import Governance from "../../../../public/Governance.json";
-import ApproveMetamask, { getAllNFts } from "@/components/ApproveProposal/approveMetamask";
+import ApproveNftMetamask,{ getAllNFts } from "@/components/ApproveProposal/approveMetamask";
 
 interface Proposal {
   description: string;
@@ -81,9 +81,11 @@ const ProposalZoom: FC = () => {
   async function fetchTokenId() {
     console.log("loggedInAddress",loggedInAddress)
     console.log("nft address",selectedProposal.nftAddress)
-    tokenId ==await getAllNFts(loggedInAddress, String(selectedProposal.nftAddress))
+    // tokenId == await getAllNFts(loggedInAddress, String(selectedProposal.nftAddress))
     setTokenId(await getAllNFts(loggedInAddress, String(selectedProposal.nftAddress)));
-    return tokenId
+
+    const oneToken=(await getAllNFts(loggedInAddress, String(selectedProposal.nftAddress)));
+    return oneToken
   }
 
   // when in the page check if comethconnected exist == done, if done remove it //show
@@ -157,6 +159,9 @@ const ProposalZoom: FC = () => {
     console.log("id", Number( selectedProposal))
     console.log("nft address", String(selectedProposal.nftAddress))
     console.log("groupID", groupId)
+
+    fetchTokenId();
+    console.log("tokenId", tokenId)
 
   })
   //make function to check cometh wallet address in local storage.
@@ -263,30 +268,37 @@ const ProposalZoom: FC = () => {
           : <></>
           }
 
-          {sismoVerfied == "verified" ? (
-            window.localStorage.getItem("comethConnected")=="true"
-             ?(
-              <Button
-                bg="black"
-                color="white"
-                _hover={{ opacity: 0.7 }}
-                className="w-1/2 mx-auto my-8 items-center text-center justify-center"
-                onClick={() => ComethApproveFunction(Number(selectedProposal.id) ,tokenId, selectedProposal.nftAddress)}
-              >
-                Approve Proposal with Cometh
-              </Button>
-            ) : (
-              // tokenId? (
-              <ApproveMetamask 
-                  proposalId={Number(selectedProposal.id)}  
-                  tokenId={tokenId}
-                  deployedContractAddress={selectedProposal.nftAddress}
-              />
-              // ):(<></>)
-            )
-          ) : (
-            <></>
-          )}
+{
+  sismoVerfied === "verified" && (
+    window.localStorage.getItem("comethConnected") === "true" ? (
+      <Button
+        bg="black"
+        color="white"
+        _hover={{ opacity: 0.7 }}
+        className="w-1/2 mx-auto my-8 items-center text-center justify-center"
+        onClick={() => 
+          ComethApproveFunction(
+            Number(selectedProposal.id),
+            fetchTokenId(),
+            String(newGovernanceAddress),
+            selectedProposal.nftAddress
+          )
+        }
+      >
+        Approve Proposal with Cometh
+      </Button>
+    ) : (
+      <ApproveNftMetamask 
+        proposalId={Number(selectedProposal.id)}  
+        tokenId={String(fetchTokenId())}
+        deployedContractAddress={String(newGovernanceAddress)}
+        nftContractAddress={String(selectedProposal.nftAddress)}
+      />
+    )
+  )
+}
+
+
           {/* enable cometh wallet when sismoVerfied state is "verified" */}
         </Card>
       </div>

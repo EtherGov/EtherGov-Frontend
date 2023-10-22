@@ -45,6 +45,8 @@ interface ApproveMetamaskProps {
     proposalId: string | number; // Adjust type as needed
     tokenId: string | number; // Adjust type as needed
     deployedContractAddress: string; // Assuming it's a string representation of an address
+    nftContractAddress: string; // Assuming it's a string representation of an address
+
 }
 
 const ApproveMetamask: React.FC<ApproveMetamaskProps> = ({ proposalId, tokenId, deployedContractAddress }) => {
@@ -53,9 +55,6 @@ const ApproveMetamask: React.FC<ApproveMetamaskProps> = ({ proposalId, tokenId, 
         abi: Governance.abi,
         functionName: 'stakeAndVote',
     })
-
-
-
     function CallContract() {
         if(window.localStorage.getItem("comethConnected")){
             localStorage.removeItem('comethConnected');
@@ -75,4 +74,102 @@ const ApproveMetamask: React.FC<ApproveMetamaskProps> = ({ proposalId, tokenId, 
         </Button>
     )
 }
-export default ApproveMetamask;
+
+
+
+import { useEffect, useState } from "react";
+import {
+  useContractRead,
+//   useContractWrite,
+  usePrepareContractWrite,
+} from "wagmi";
+import NFTTest from "../../../public/NFTTest.json";
+
+const ApproveNftMetamask: React.FC<ApproveMetamaskProps> = ({ proposalId, tokenId, deployedContractAddress,nftContractAddress }) => {
+
+// // export function ApproveNft() {
+//   const [nftAddress, setNftAddress] = useState<string>(
+//     "0x36114dee13F83ebcC22618DE0da3Df585C46507A"
+//   );
+//   const [governanceAddress, setGovernanceAddress] = useState<string>(
+//     "0x9f8ff148c0337d89038411fd036f626cf12f581e"
+//   );
+//   const [tokenId, setTokenId] = useState<number>(3);
+  const [governanceData, setGovernanceData] = useState<string[]>([""]);
+    console.log("nftContractAddress",nftContractAddress);
+    console.log("deployedContractAddress",deployedContractAddress);
+  const {
+    data,
+    isLoading,
+    isSuccess,
+    writeAsync: approveNft,
+  } = useContractWrite({
+    address: nftContractAddress as `0x${string}`,
+    abi: NFTTest.abi,
+    functionName: "approve",
+    onSuccess: () => {
+      if (write) {
+        write();
+      }
+    },
+  });
+
+//   const { data: data2 } = useContractRead({
+//     address: deployedContractAddress as `0x${string}`,
+//     abi: Governance.abi,
+//     functionName: "getGovernanceAndNFTLockAddresses",
+//   });
+
+  const { config } = usePrepareContractWrite({
+    address: deployedContractAddress as `0x${string}`,
+    abi: Governance.abi,
+    functionName: "stakeAndVote",
+    args: [proposalId, tokenId],
+  });
+
+  const {
+    data: data3,
+    isLoading: isLoading3,
+    isSuccess: isSuccess3,
+    write,
+  } = useContractWrite(config);
+
+//   useEffect(() => {
+//     console.log(data2);
+//     setGovernanceData(data2 as string[]);
+//   }, [data2]);
+
+  const handleClick = async () => {
+    if (approveNft) {
+      await approveNft({
+        args: [deployedContractAddress, tokenId],
+      });
+      window.localStorage.setItem("comethConnected", "done")
+    }
+  };
+  
+  return (
+
+    // <div>
+    //   <h1>Approve NFT</h1>
+    //   <div>
+        // <Button onClick={handleClick}>Approve</Button>
+
+    <Button
+        bg="black"
+        color="white"
+        _hover={{ opacity: 0.7 }}
+        className="w-1/2 mx-auto my-8 items-center text-center justify-center"
+        onClick={() => handleClick()}
+    >
+        Approve Proposal with MetaMask
+    </Button>
+    //   </div>
+    //   <div>{isSuccess3 ?? <p>{data3?.hash}</p>}</div>
+    // </div>
+
+  );
+}
+
+export default ApproveNftMetamask;
+
