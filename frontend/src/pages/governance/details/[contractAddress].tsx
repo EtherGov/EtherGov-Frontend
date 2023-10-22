@@ -1,5 +1,10 @@
 import { useRouter } from "next/router";
-import { useAccount, useContractRead } from "wagmi";
+import {
+  useAccount,
+  useContractRead,
+  useContractWrite,
+  usePrepareContractWrite,
+} from "wagmi";
 import Governance from "../../../../public/Governance.json";
 import { useEffect, useState } from "react";
 import {
@@ -16,6 +21,7 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from "@chakra-ui/react";
+import { ethers } from "ethers";
 
 function GovernanceDetail() {
   const [governanceAddress, setGovernanceAddress] = useState<string>(""); // ["0x00ABdb2FbBC763B6B4A8700E10550Ad74daC4d43"
@@ -23,6 +29,7 @@ function GovernanceDetail() {
   const [chainId, setChainId] = useState<number>(0); // [
   const [walletAddress, setWalletAddress] = useState<string>("");
   const [shouldRefetch, setShouldRefetch] = useState(true);
+  const [value, setValue] = useState<any>("");
 
   const [activeProposals, setActiveProposals] = useState<any[]>([]);
   const [passedProposals, setPassedProposals] = useState<any[]>([]);
@@ -77,6 +84,19 @@ function GovernanceDetail() {
     }
   }, [data, data2, shouldRefetch]);
 
+  const { data: data3, writeAsync } = useContractWrite({
+    address: "0x613eaa1a4dB8A11f83C7e3B8FEE8F21efd3C2c2c",
+    abi: Governance.abi,
+    functionName: "executeProposal",
+    value: value,
+  });
+
+  useEffect(() => {
+    const etherValue = ethers.utils.parseEther("0.02");
+    const bigIntValue = BigInt(etherValue.toString());
+    setValue(bigIntValue);
+  }, []);
+
   const handleDeployAA = async () => {
     try {
       const payload = {
@@ -112,19 +132,22 @@ function GovernanceDetail() {
       const allProposal = data2 as any[];
       const proposal = allProposal.filter((p) => Number(p.id) === Number(id));
       console.log(proposal);
-      const result = await axios.post(
-        "http://localhost:3001/governance/execute-proposal",
-        {
-          governance_address: router.query.contractAddress,
-          messageBody: proposal[0].messageBody,
-          proposalId: Number(proposal[0].id),
-        }
-      );
+      //   const result = await axios.post(
+      //     "http://localhost:3001/governance/execute-proposal",
+      //     {
+      //       governance_address: router.query.contractAddress,
+      //       messageBody: proposal[0].messageBody,
+      //       proposalId: Number(proposal[0].id),
+      //     }
+      //   );
 
-      console.log(result.data);
-      if (result.data.status === 200) {
-        alert("Proposal executed");
-      }
+      //   console.log(result.data);
+      //   if (result.data.status === 200) {
+      //     alert("Proposal executed");
+      //   }
+      await writeAsync({
+        args: [Number(proposal[0].id)],
+      });
     } catch (e) {
       console.log(e);
     }
