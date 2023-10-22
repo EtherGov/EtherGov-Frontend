@@ -18,14 +18,21 @@ export default async function HandleRequest(req: NextApiRequest, res: NextApiRes
 
   try {
     console.log("comethWallet", comethWallet)
-    const config: SismoConnectConfig = comethWallet !== "null"
-    ? {
-        appId: "0x081d495d9a48438002867986b3fdc187",
-        vault: { impersonate: [comethWallet] }
-      }
-    : {
-        appId: "0x081d495d9a48438002867986b3fdc187"
-      };
+  // const useCometh=window.localStorage.getItem("comethConnected")
+  //   const config: SismoConnectConfig = { useCometh == "true"?
+  //   {appId: "0x081d495d9a48438002867986b3fdc187",
+  //     vault:{impersonate:[comethWallet]}
+  //   }:{appId: "0x081d495d9a48438002867986b3fdc187",}
+  //  }
+  const config: SismoConnectConfig = comethWallet !== "null" ? 
+  {
+    appId: "0x081d495d9a48438002867986b3fdc187",
+    vault: { impersonate: [comethWallet] }
+  } : 
+  {
+    appId: "0x081d495d9a48438002867986b3fdc187"
+  };
+      
 
     const sismoConnect = SismoConnect({config:config} );
 
