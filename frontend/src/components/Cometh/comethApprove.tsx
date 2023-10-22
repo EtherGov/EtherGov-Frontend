@@ -13,7 +13,7 @@ export async function ComethApproveFunction(proposalId: any, tokenId: any, deplo
     console.log("provider", provider.getSigner())
 
     const nftContract = new ethers.Contract(
-        "0x5c0Bb444AB6E56408B4d70C78d4d708244ADe9BA",//deployedContractAddress
+        deployedContractAddress,//deployedContractAddress
         Governance.abi,//registry
         provider.getSigner()
     )

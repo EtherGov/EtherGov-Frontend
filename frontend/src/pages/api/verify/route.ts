@@ -4,26 +4,33 @@ import {
 } from "@sismo-core/sismo-connect-client";
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { AUTHS,CONFIG, SIGNATURE_REQUEST } from "../../../shared/sismo";
+import { AUTHS, SIGNATURE_REQUEST } from "../../../shared/sismo";
+import { useState } from "react";
 
-const config: SismoConnectConfig = {
-  // you will need to register an appId in the Factory
-  appId: "0x081d495d9a48438002867986b3fdc187",
-}
-const sismoConnect = SismoConnect({config: CONFIG} );
+
 
 // this is the API route that is called by the SismoConnectButton
-export default async function handleRequest(req: NextApiRequest, res: NextApiResponse) {
+export default async function HandleRequest(req: NextApiRequest, res: NextApiResponse) {
+
+  const comethGroupId = req.query.comethGroupId as string;
+  const comethWallet = req.query.comethWallet as string;
+
+
   try {
-    console.log("req ", req);
-    console.log("response ", req.body);
+    console.log("comethWallet", comethWallet)
+    const config: SismoConnectConfig = comethWallet !== "null"
+    ? {
+        appId: "0x081d495d9a48438002867986b3fdc187",
+        vault: { impersonate: [comethWallet] }
+      }
+    : {
+        appId: "0x081d495d9a48438002867986b3fdc187"
+      };
 
-    const comethGroupId = req.query.comethGroupId;
-    console.log("comethGroupId ", comethGroupId);
-    // console.log("Received ID:", id);
+    const sismoConnect = SismoConnect({config:config} );
 
-    // const sismoConnectResponse = await req.body;
     const sismoConnectResponse = JSON.parse(req.body);
+
     console.log("sismoConnectResponse", sismoConnectResponse);
 
     const result: SismoConnectVerifiedResult = await sismoConnect.verify(
@@ -44,6 +51,6 @@ export default async function handleRequest(req: NextApiRequest, res: NextApiRes
   } catch (e: any) {
     console.log("error", e.message);
     console.error(e);
-    return res.status(500).json({ error: e.message });
+    return res.status(500).json({ error: e.message, comethWallet });
   }
 }

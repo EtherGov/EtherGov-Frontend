@@ -1,5 +1,5 @@
 import { Button, Card, Divider, Textarea } from "@chakra-ui/react";
-import { useState, FC, useEffect } from "react";
+import { useState, FC, useEffect, use } from "react";
 import { Progress } from "@chakra-ui/react";
 import ConnectComethWallet from "@/components/Cometh/comethConnectWallet";
 import SismoConnectFunction from "@/components/Sismo/SismoConnect";
@@ -60,40 +60,47 @@ const ProposalZoom: FC = () => {
 
   const [sismoVerfied, setsismoVerfied] = useState<string>("init");
 
-  const [loggedInAddress, setLoggedInAddress] = useState<string | null>(null);
+  const [loggedInAddress, setLoggedInAddress] = useState<string | null>(address?.toString() || null);
 
   const [tokenId, setTokenId] = useState<number>(0);
+
+    const[groupId, setGroupId] = useState<string>("")
 
   useEffect(() => {
     setLoggedInAddress(address || null);
 
   }, [address]);
 
-  useEffect(() => {
-    console.log("login add", loggedInAddress);
-  }, [loggedInAddress]);
+  // useEffect(() => {
+  //   console.log("login add", selectedProposal.groupid);
+  // }, []);
 
   useEffect(() => {
     async function fetchTokenId() {
+      console.log("loggedInAddress",loggedInAddress)
         const id = await getAllNFts(loggedInAddress, String(selectedProposal.nftAddress));
         setTokenId(id);
     }
-
     fetchTokenId();
-}, []);
+    // setGroupId(String(selectedProposal.groupId))
+    // console.log("groupID", groupId)
+  }, []);
+
+  useEffect(() => {
+    // setGroupId(String(selectedProposal.groupId))
+    console.log("groupID", groupId)
+  }, [groupId]);
 
   const [newId, setNewId] = useState("");
   const [newGovernanceAddress, setNewGovernanceAddress] = useState("");
-  const [selectedProposal, setSelectedProposal] = useState([]); //selectedProposal ini data yang di fetch
-
-
- 
+  const [selectedProposal, setSelectedProposal] = useState<Proposal[]>([]); //selectedProposal ini data yang di fetch
 
   useEffect(() => {
     const { id, governanceAddress } = router.query;
+    // console.log("id tolol", id);
     setNewId(id as string);
     setNewGovernanceAddress(governanceAddress as `0x${string}`);
-  }, []);
+  }, [router.query]);
 
   const { data: data1 } = useContractRead({
     address: newGovernanceAddress as `0x${string}`,
@@ -101,12 +108,9 @@ const ProposalZoom: FC = () => {
     functionName: "returnAllProposal",
   });
 
-  // function handleClick (){
-  //   console.log("id", newId)
-  //   console.log("governance", newGovernanceAddress)
-  //   console.log("data1", data1)
-  //   console.log("asdasd", selectedProposal)
-  // }
+  function handleClick (){
+    console.log("asdasd proposal", String(selectedProposal.groupId))
+  }
 
   useEffect(() => {
     // 'data1' is unknown, so we'll assert it as any, then check if it behaves as an array.
@@ -119,22 +123,23 @@ const ProposalZoom: FC = () => {
       // Access the proposal by its index only if it's within the array bounds
       if (index >= 0 && index < proposals.length) {
         setSelectedProposal(proposals[index]);
+        setGroupId(String(proposals[index].groupId))
+        
       }
     }
   }, [data1, newId]); //
 
   useEffect(() =>{
-    console.log("id", Number( selectedProposal.id))
+    console.log("PAGE")
+    console.log("id", Number( selectedProposal))
     console.log("nft address", String(selectedProposal.nftAddress))
+    console.log("groupID", groupId)
 
   })
 
-
-
-
   return (
     <div className="h-full">
-      {/* <button onClick={handleClick}>click</button> */}
+      <button onClick={handleClick}>click</button>
       <div className="mt-8 w-2/3 mx-auto">
         <Card className="my-8 p-8 mx-auto justify-center">
           <h1 className="text-3xl font-semibold text-left justify-center">
@@ -218,11 +223,16 @@ const ProposalZoom: FC = () => {
 
           {/* <ComethApprove/> */}
           {/* <ComethGaslessTransaction/> */}
-
-          <SismoConnectFunction 
-            comethGroupId="0xc505a8125fc571896eecdadb908e7706"
+          {
+            groupId && loggedInAddress ? <SismoConnectFunction 
+            comethGroupId= {groupId}
             setsismoVerfied={setsismoVerfied}
-          />
+            comethWallet={isConnected==true ? loggedInAddress as string :"null"}
+            //loggedInAddress
+          /> : <></>
+          }
+
+          
           {sismoVerfied == "verified" ? (
             isConnected == true ? (
               <Button

@@ -49,7 +49,7 @@ interface ApproveMetamaskProps {
 
 const ApproveMetamask: React.FC<ApproveMetamaskProps> = ({ proposalId, tokenId, deployedContractAddress }) => {
     const { data, isLoading, isSuccess, write } = useContractWrite({
-        address: '0x38ec35d7E260A819E74E1938187470D931284744',
+        address: `0x${deployedContractAddress.slice(2)}`,
         abi: Governance.abi,
         functionName: 'stakeAndVote',
     })
