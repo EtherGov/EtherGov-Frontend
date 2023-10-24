@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
 import {
   useAccount,
+  useContractEvent,
   useContractRead,
   useContractWrite,
   usePrepareContractWrite,
@@ -21,6 +22,7 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from "@chakra-ui/react";
+import TestExecute from "../../../../public/TestExecute.json";
 import { ethers } from "ethers";
 
 function GovernanceDetail() {
@@ -29,6 +31,8 @@ function GovernanceDetail() {
   const [chainId, setChainId] = useState<number>(0); // [
   const [walletAddress, setWalletAddress] = useState<string>("");
   const [shouldRefetch, setShouldRefetch] = useState(true);
+  const [recepient, setRecepient] = useState<any>("");
+  const [encodedPayload, setEncodedPayload] = useState<any>("");
   const [value, setValue] = useState<any>("");
 
   const [activeProposals, setActiveProposals] = useState<any[]>([]);
@@ -84,12 +88,71 @@ function GovernanceDetail() {
     }
   }, [data, data2, shouldRefetch]);
 
-  const { data: data3, writeAsync } = useContractWrite({
-    address: "0x613eaa1a4dB8A11f83C7e3B8FEE8F21efd3C2c2c",
-    abi: Governance.abi,
-    functionName: "executeProposal",
-    value: value,
-  });
+  // const { data: data3, writeAsync } = useContractWrite({
+  //   address: "0x613eaa1a4dB8A11f83C7e3B8FEE8F21efd3C2c2c",
+  //   abi: Governance.abi,
+  //   functionName: "executeProposal",
+  //   value: value,
+  // });
+
+  // const { config } = usePrepareContractWrite({
+  //   address: "0x29aec73985509c5539ead48a0576b9febfd0c70b",
+  //   abi: TestExecute.abi,
+  //   functionName: "execute",
+  //   value: value,
+  //   args: [80001, recepient, encodedPayload],
+  // });
+
+  // const encodePayload = () => {
+  //   const value = [
+  //     534351,
+  //     "0x81cBB0aa06cB4ECeB64a1959e29509f109F58C29", //token address
+  //     100,
+  //     "transferFrom(address, address, uint256)",
+  //     "TRANSFER",
+  //     "0x981858eFA86aB7Fb614DC3b554B43d13F22c03f5", //mumbai
+  //     "0xcA51855FBA4aAe768DCc273349995DE391731e70", //address of the same network
+  //   ];
+  //   const type = [
+  //     "uint256",
+  //     "address",
+  //     "uint256",
+  //     "string",
+  //     "string",
+  //     "address",
+  //     "address",
+  //   ];
+  //   const encoding = ethers.utils.defaultAbiCoder.encode(type, value);
+  //   setEncodedPayload(encoding);
+  // };
+
+  // const { data: data4, isLoading, isSuccess, write } = useContractWrite(config);
+
+  // const handleClick = () => {
+  //   if (write) {
+  //     write();
+  //   }
+  // };
+
+  // const unwatch = useContractEvent({
+  //   address: "0xCC737a94FecaeC165AbCf12dED095BB13F037685",
+  //   abi: TestExecute.abi,
+  //   eventName: "DispatchId",
+  //   listener: async (event) => {
+  //     console.log(event[1].topics[1]);
+  //     unwatch?.();
+  //   },
+  // });
+
+  // useEffect(() => {
+  //   setRecepient(
+  //     ethers.utils.hexZeroPad("0x8044aa5d743a49bd1913cef81a828cda1453b39a", 32)
+  //   );
+  //   encodePayload();
+  //   const etherValue = ethers.utils.parseEther("0.01");
+  //   const bigIntValue = BigInt(etherValue.toString());
+  //   setValue(bigIntValue);
+  // }, []);
 
   useEffect(() => {
     const etherValue = ethers.utils.parseEther("0.02");
@@ -132,22 +195,22 @@ function GovernanceDetail() {
       const allProposal = data2 as any[];
       const proposal = allProposal.filter((p) => Number(p.id) === Number(id));
       console.log(proposal);
-      //   const result = await axios.post(
-      //     "http://localhost:3001/governance/execute-proposal",
-      //     {
-      //       governance_address: router.query.contractAddress,
-      //       messageBody: proposal[0].messageBody,
-      //       proposalId: Number(proposal[0].id),
-      //     }
-      //   );
+      const result = await axios.post(
+        "http://localhost:3001/governance/execute-proposal",
+        {
+          governance_address: router.query.contractAddress,
+          messageBody: proposal[0].messageBody,
+          proposalId: Number(proposal[0].id),
+        }
+      );
 
-      //   console.log(result.data);
-      //   if (result.data.status === 200) {
-      //     alert("Proposal executed");
-      //   }
-      await writeAsync({
-        args: [Number(proposal[0].id)],
-      });
+      console.log(result.data);
+      if (result.data.status === 200) {
+        alert("Proposal executed");
+      }
+      // await writeAsync({
+      //   args: [Number(proposal[0].id)],
+      // });
     } catch (e) {
       console.log(e);
     }
