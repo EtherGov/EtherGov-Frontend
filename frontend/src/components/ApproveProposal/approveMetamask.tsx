@@ -85,7 +85,7 @@ import {
 } from "wagmi";
 import NFTTest from "../../../public/NFTTest.json";
 
-const ApproveNftMetamask: React.FC<ApproveMetamaskProps> = ({ proposalId, tokenId, deployedContractAddress,nftContractAddress }) => {
+const ApproveNftMetamask: React.FC<ApproveMetamaskProps> = ({ proposalId, tokenId, deployedContractAddress, nftContractAddress }) => {
 
 // // export function ApproveNft() {
 //   const [nftAddress, setNftAddress] = useState<string>(
@@ -124,7 +124,7 @@ const ApproveNftMetamask: React.FC<ApproveMetamaskProps> = ({ proposalId, tokenI
     address: deployedContractAddress as `0x${string}`,
     abi: Governance.abi,
     functionName: "stakeAndVote",
-    args: [proposalId, tokenId],
+    args: [Number(proposalId), Number(tokenId)],
   });
 
   const {
@@ -140,11 +140,12 @@ const ApproveNftMetamask: React.FC<ApproveMetamaskProps> = ({ proposalId, tokenI
 //   }, [data2]);
 
   const handleClick = async () => {
+    window.localStorage.setItem("comethConnected", "done");
     if (approveNft) {
+      window.localStorage.setItem("comethConnected", "done");
       await approveNft({
         args: [deployedContractAddress, tokenId],
       });
-      window.localStorage.setItem("comethConnected", "done")
     }
   };
   

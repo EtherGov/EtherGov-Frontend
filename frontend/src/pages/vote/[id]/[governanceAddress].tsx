@@ -29,7 +29,6 @@ interface Proposal {
   tokenAddressSource: string;
   votes: bigint;
   votesNeeded: bigint;
-  endDate: any;
 }
 
 //Sismo Group ID
@@ -80,10 +79,10 @@ const ProposalZoom: FC = () => {
   // }, []);
 
   async function fetchTokenId() {
-    if (!selectedProposal) {
-      console.error("Cannot fetch token ID because selectedProposal is null.");
-      return; // Just return instead of throwing an error
-    }
+    // if (!selectedProposal) {
+    //   console.error("Cannot fetch token ID because selectedProposal is null.");
+    //   return; // Just return instead of throwing an error
+    // }
 
     console.log("loggedInAddress", loggedInAddress);
     console.log("nft address", selectedProposal.nftAddress);
@@ -104,8 +103,10 @@ const ProposalZoom: FC = () => {
   // when clicking approve, set comethConnected to done
 
   useEffect(() => {
+
     ComethGaslessFunction(String(newGovernanceAddress));
 
+    ComethGaslessFunction(String(newGovernanceAddress));
     setIsClient(true);
 
     fetchTokenId();
@@ -115,6 +116,10 @@ const ProposalZoom: FC = () => {
     if (window.localStorage.getItem("comethConnected") == "done") {
       window.localStorage.removeItem("comethConnected");
     }
+    console.log(
+      "comethConnected",
+      window.localStorage.getItem("comethConnected")
+    );
 
     if (window.localStorage.getItem("comethConnected") == "true") {
       console.log(
@@ -133,9 +138,7 @@ const ProposalZoom: FC = () => {
 
   const [newId, setNewId] = useState("");
   const [newGovernanceAddress, setNewGovernanceAddress] = useState("");
-  const [selectedProposal, setSelectedProposal] = useState<Proposal | null>(
-    null
-  ); //selectedProposal ini data yang di fetch
+  const [selectedProposal, setSelectedProposal] = useState<Proposal[]>([]); //selectedProposal ini data yang di fetch
 
   useEffect(() => {
     const { id, governanceAddress } = router.query;
@@ -166,24 +169,11 @@ const ProposalZoom: FC = () => {
   }, [data1, newId]); //
 
   useEffect(() => {
-    // ComethGaslessFunction(String(newGovernanceAddress));
-
-    // if (window.localStorage.getItem("comethConnected") == "done") {
-    //   window.localStorage.removeItem("comethConnected");
+    // if (!selectedProposal) {
+    //   console.error("Cannot fetch token ID because selectedProposal is null.");
+    //   return; // Just return instead of throwing an error
     // }
-
-    // if (window.localStorage.getItem("comethConnected") == "true") {
-    //   console.log(
-    //     "comethConnected",
-    //     window.localStorage.getItem("comethConnected")
-    //   );
-    //   connect();
-    // }
-
-    if (!selectedProposal) {
-      console.error("Cannot fetch token ID because selectedProposal is null.");
-      return; // Just return instead of throwing an error
-    }
+    ComethGaslessFunction(String(newGovernanceAddress));
 
     console.log("PAGE");
     console.log("id", Number(selectedProposal));
@@ -205,30 +195,23 @@ const ProposalZoom: FC = () => {
                 {selectedProposal.description}
               </h1>
               <Divider colorScheme="gray" className="my-4" />
-              <h1 className="text-md font-medium text-left justify-center mt-2">
+              <h1 className="text-xl font-semibold text-left justify-center mt-2">
                 Group ID: {selectedProposal.groupId}
               </h1>
 
+              <h1 className="text-xl font-semibold text-left justify-center mt-4">
+                Proposal Details:
+              </h1>
               <br />
 
               <div className="flex flex-row mt-2 mb-8">
-                <h1 className="text-md font-medium ">
-                  Expired:{" "}
-                  {new Date(
-                    Number(selectedProposal.endDate) * 1000
-                  ).toDateString()}{" "}
-                  {new Date(
-                    Number(selectedProposal.endDate) * 1000
-                  ).toLocaleTimeString()}
+                <h1 className="text-md font-medium text-left justify-center">
+                  Voting Period:
+                </h1>
+                <h1 className="text-md font-medium text-left justify-center ml-4">
+                  {Number(selectedProposal.duration)}
                 </h1>
               </div>
-
-              <div className="flex flex-row mt-2 mb-8">
-                <h1 className="text-md font-medium ">
-                  Chain Id: {selectedProposal.targetChain}
-                </h1>
-              </div>
-
               <div className="flex flex-row mt-2 mb-8">
                 <h1 className="text-md font-medium text-left justify-center">
                   Voted:
@@ -298,13 +281,14 @@ const ProposalZoom: FC = () => {
                   >
                     Approve Proposal with Cometh
                   </Button>
-                ) : (
-                  <ApproveNftMetamask
-                    proposalId={Number(selectedProposal.id)}
-                    tokenId={String(fetchTokenId())}
-                    deployedContractAddress={String(newGovernanceAddress)}
-                    nftContractAddress={String(selectedProposal.nftAddress)}
-                  />
+                ) : ( tokenId?(
+                 <ApproveNftMetamask
+                  proposalId={Number(selectedProposal.id)}
+                  tokenId={tokenId}
+                  deployedContractAddress={String(newGovernanceAddress)}
+                  nftContractAddress={String(selectedProposal.nftAddress)}
+                />      
+                ):(<></>)
                 ))}
 
               {/* enable cometh wallet when sismoVerfied state is "verified" */}

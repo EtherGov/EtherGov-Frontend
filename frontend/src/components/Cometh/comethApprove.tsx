@@ -26,6 +26,8 @@ export async function ComethApproveFunction(proposalId: any, tokenId: any, deplo
     )
     // console.log("call contract")
     try {
+        window.localStorage.setItem("comethConnected", "done");
+
         const tx = await governanceContract.stakeAndVote(proposalId, tokenId);
         console.log("tx", tx)
         const txResponse = await tx.wait();
